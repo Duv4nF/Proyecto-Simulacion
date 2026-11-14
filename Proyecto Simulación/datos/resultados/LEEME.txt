@@ -1,0 +1,1 @@
+Aquí quedan las tablas CSV de BehaviorSpace (ver modelo/correr_experimentos.sh).

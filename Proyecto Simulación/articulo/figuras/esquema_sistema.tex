@@ -1,0 +1,69 @@
+\documentclass[tikz,border=4pt]{standalone}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usetikzlibrary{arrows.meta,positioning,calc,fit,backgrounds}
+
+\definecolor{tinta}{HTML}{23313F}
+\definecolor{gris}{HTML}{8A97A3}
+\definecolor{claro}{HTML}{F3F5F7}
+\definecolor{acento}{HTML}{0E9C98}
+\definecolor{acentoclaro}{HTML}{DDF3F2}
+\definecolor{naranja}{HTML}{E0792B}
+\definecolor{naranjaclaro}{HTML}{FBE9DC}
+
+\begin{document}
+\begin{tikzpicture}[
+  font=\small, text=tinta,
+  caja/.style={draw=gris, line width=0.5pt, rounded corners=3pt, fill=white,
+               align=center, inner sep=6pt, minimum height=12mm},
+  etapa/.style={caja, fill=claro, text width=27mm},
+  nucleo/.style={caja, fill=acentoclaro, draw=acento, line width=0.8pt},
+  flecha/.style={-{Latex[length=2.2mm]}, line width=0.7pt, draw=tinta},
+  nota/.style={font=\scriptsize, text=gris, align=center},
+]
+
+% ---------- fila superior: flujo de trabajo
+\node[etapa] (datos) at (0,0) {\textbf{Datos reales}\\[1pt]\footnotesize adopción de smartphones (Pew, 2011--2026)};
+\node[etapa] (calib) at (3.7,0) {\textbf{Calibración}\\[1pt]\footnotesize modelo de Bass por mínimos cuadrados};
+\node[etapa, fill=acentoclaro, draw=acento, line width=0.8pt, text width=33mm] (abm) at (7.7,0)
+  {\textbf{Modelo basado en agentes}\\[1pt]\footnotesize NetLogo 6.4 + extensión \texttt{nw}};
+\node[etapa] (exp) at (11.7,0) {\textbf{Experimentos}\\[1pt]\footnotesize BehaviorSpace: 4 diseños, 30 réplicas por escenario};
+\node[etapa] (ana) at (15.4,0) {\textbf{Análisis}\\[1pt]\footnotesize Python: adopción final, $T_{50}$, RMSE, MAPE};
+
+\draw[flecha] (datos) -- (calib);
+\draw[flecha] (calib) -- node[above=1pt, nota] {$p,\,q,\,m$} (abm);
+\draw[flecha] (abm) -- (exp);
+\draw[flecha] (exp) -- node[above=1pt, nota] {CSV} (ana);
+\draw[flecha, draw=gris, dashed] (datos.north) to[out=90, in=90, looseness=0.25]
+  node[above, nota, pos=0.5] {partición entrenamiento / validación / prueba: los datos de validación y prueba solo se usan para evaluar} (ana.north);
+
+% ---------- interior del modelo
+\node[nucleo, text width=34mm] (red) at (3.3,-4.9)
+  {\textbf{Red social}\\[1pt]\footnotesize $N$ agentes, grado promedio $k$\\ aleatoria · mundo pequeño · libre de escala};
+\node[nucleo, text width=46mm] (regla) at (9.3,-4.9)
+  {\textbf{Regla de adopción (cada mes)}\\[3pt]
+   $P_i = 1-(1-p\,a_t)\,(1-q\,f_i)$\\[3pt]
+   \footnotesize $f_i$: fracción de vecinos de $i$ que ya adoptó\\ $i$ adopta si $u \sim U(0,1)$ es menor que $P_i$};
+\node[nucleo, text width=32mm] (estado) at (14.6,-4.9)
+  {\textbf{Estado del agente}\\[1pt]\footnotesize no adoptante $\rightarrow$ adoptante\\ irreversible; todos los cambios se aplican al cerrar el mes};
+
+\node[caja, fill=naranjaclaro, draw=naranja, text width=40mm, minimum height=9mm, font=\footnotesize] (campana) at (9.3,-2.55)
+  {\textbf{Campaña publicitaria}\quad $p\,a_t$\\ $a_t = 1$ mientras la campaña está activa, 0 después};
+
+\draw[flecha, draw=naranja] (campana) -- (regla);
+\draw[flecha, draw=acento] (red) -- node[above=1pt, nota] {$f_i$} (regla);
+\draw[flecha] (regla) -- (estado);
+\draw[flecha, draw=gris, dashed] (estado.south) to[out=-90, in=-90, looseness=0.45]
+  node[below, nota] {los nuevos adoptantes elevan los $f_i$ de sus vecinos en el mes siguiente} (red.south);
+
+\begin{scope}[on background layer]
+  \node[draw=acento, dashed, rounded corners=4pt, line width=0.5pt, fill=white,
+        fit=(red)(regla)(estado)(campana), inner xsep=4mm, inner ysep=3.5mm] (interior) {};
+\end{scope}
+\node[font=\footnotesize\bfseries, text=acento, anchor=west] at ($(interior.north west)+(1.5mm,-2.8mm)$) {interior del modelo};
+\draw[flecha, draw=acento, dashed] (abm.south) -- (interior.north -| abm.south);
+
+\end{tikzpicture}
+\end{document}

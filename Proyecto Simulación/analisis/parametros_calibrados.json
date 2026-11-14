@@ -1,0 +1,137 @@
+{
+  "origen_temporal": 2007.46,
+  "anual": {
+    "p": 0.07922613861730371,
+    "q": 0.24185142818333424,
+    "m": 0.89,
+    "error_estandar": {
+      "p": 0.007623324297338621,
+      "q": 0.03105366813274542
+    }
+  },
+  "mensual": {
+    "p": 0.0066021782181086425,
+    "q": 0.02015428568194452,
+    "m": 0.89
+  },
+  "seleccion_m": [
+    {
+      "m": 0.8,
+      "RMSE_validacion": 4.54241864656384
+    },
+    {
+      "m": 0.81,
+      "RMSE_validacion": 3.948573944475119
+    },
+    {
+      "m": 0.82,
+      "RMSE_validacion": 3.3817702577317146
+    },
+    {
+      "m": 0.83,
+      "RMSE_validacion": 2.8422315762400654
+    },
+    {
+      "m": 0.84,
+      "RMSE_validacion": 2.330834904109484
+    },
+    {
+      "m": 0.85,
+      "RMSE_validacion": 1.8499507291847344
+    },
+    {
+      "m": 0.86,
+      "RMSE_validacion": 1.4056184022316462
+    },
+    {
+      "m": 0.87,
+      "RMSE_validacion": 1.014048350008601
+    },
+    {
+      "m": 0.88,
+      "RMSE_validacion": 0.7218235190563318
+    },
+    {
+      "m": 0.89,
+      "RMSE_validacion": 0.6329910390251573
+    },
+    {
+      "m": 0.9,
+      "RMSE_validacion": 0.7868619004034111
+    },
+    {
+      "m": 0.91,
+      "RMSE_validacion": 1.064504828429977
+    },
+    {
+      "m": 0.92,
+      "RMSE_validacion": 1.3798076597403084
+    },
+    {
+      "m": 0.93,
+      "RMSE_validacion": 1.7018869183297656
+    },
+    {
+      "m": 0.94,
+      "RMSE_validacion": 2.0198187928553177
+    },
+    {
+      "m": 0.95,
+      "RMSE_validacion": 2.3293348049160985
+    },
+    {
+      "m": 0.96,
+      "RMSE_validacion": 2.6286923112347518
+    },
+    {
+      "m": 0.97,
+      "RMSE_validacion": 2.9172368945314564
+    },
+    {
+      "m": 0.98,
+      "RMSE_validacion": 3.194830270813267
+    },
+    {
+      "m": 0.99,
+      "RMSE_validacion": 3.461595396392476
+    },
+    {
+      "m": 1.0,
+      "RMSE_validacion": 3.717792246701949
+    }
+  ],
+  "tiempo_pico_anios": 3.4758495842551103,
+  "particion": {
+    "entrenamiento": {
+      "inicio": 2011.0,
+      "fin": 2017.0
+    },
+    "validacion": {
+      "inicio": 2018.0,
+      "fin": 2022.0
+    },
+    "prueba": {
+      "inicio": 2023.0,
+      "fin": 2027.0
+    }
+  },
+  "n_observaciones": {
+    "entrenamiento": 26,
+    "validacion": 3,
+    "prueba": 4
+  },
+  "desempeno_bass": {
+    "entrenamiento": {
+      "RMSE_pct": 2.2860308684513777,
+      "MAPE_pct": 3.641146531958804
+    },
+    "validacion": {
+      "RMSE_pct": 0.6329910390251573,
+      "MAPE_pct": 0.5970714777592739
+    },
+    "prueba": {
+      "RMSE_pct": 3.0987910170926476,
+      "MAPE_pct": 3.401192632545633
+    }
+  }
+}

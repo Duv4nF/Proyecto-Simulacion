@@ -1,0 +1,174 @@
+% Manuscrito en formato Springer LNCS.
+% Compilar con la clase oficial llncs (Overleaf: plantilla "Springer Lecture Notes in Computer Science").
+% Las cifras citadas en el texto se leen de tablas/cifras.tex, generado por analisis/analisis_resultados.py.
+\documentclass[runningheads]{llncs}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[spanish,es-tabla,es-noshorthands]{babel}
+\usepackage{graphicx}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{url}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\renewcommand\UrlFont{\color{blue}\rmfamily}
+\renewcommand{\topfraction}{0.95}
+\renewcommand{\textfraction}{0.05}
+\renewcommand{\floatpagefraction}{0.9}
+
+\input{tablas/cifras}
+\renewcommand{\keywordname}{\textbf{Palabras clave:}}
+\graphicspath{{figuras/}{../analisis/figuras/}}
+
+\begin{document}
+
+\title{Difusión de una innovación en redes sociales: un modelo basado en agentes calibrado con la adopción de teléfonos inteligentes}
+\titlerunning{Difusión de una innovación en redes sociales}
+
+\author{Jesus Gregorio Delgado \and David Andres Monroy Aguiar \and Duvan Felipe Baquero Cerquera}
+\authorrunning{J. G. Delgado et al.}
+
+\institute{Programa de Ingeniería de Sistemas, Facultad de Ciencias Básicas e Ingeniería,\\
+Universidad de los Llanos, Villavicencio, Colombia\\
+\email{\{jesus.delgado,david.monroy,duvan.baquero\}@unillanos.edu.co}}
+
+\maketitle
+
+\begin{abstract}
+La adopción de una tecnología nueva rara vez es una decisión aislada: cada persona decide bajo la influencia de la publicidad y de quienes la rodean. En este trabajo se construye un modelo basado en agentes, implementado en NetLogo, que simula la difusión de una innovación ---los teléfonos inteligentes--- en una población conectada por una red social. Cada agente adopta con una probabilidad que combina la influencia externa de una campaña publicitaria y la imitación de sus vecinos, siguiendo la formulación en red del modelo de Bass. Los parámetros se calibraron con la serie de adopción de smartphones entre adultos de Estados Unidos publicada por Pew Research Center (2011--2026), dividida cronológicamente en entrenamiento, validación y prueba: la validación se usó para elegir el potencial de mercado y la estructura de red, y la prueba solo para evaluar. Con 30 réplicas por escenario se compararon la difusión sin publicidad frente a una campaña activa, redes de distinta densidad y topología, y campañas de distinta duración, con el porcentaje de adopción al final del período como medida de desempeño. Con los coeficientes calibrados, la imitación por sí sola no basta para que la innovación despegue en diez años (menos del \cifraSinCalKDieciseis\,\% de adopción), mientras que una campaña permanente alcanza entre \cifraConCalKDos\,\% y \cifraConCalKDieciseis\,\% según la densidad de la red, y una de solo dos años captura más de la mitad de ese efecto. La estructura de la red importa sobre todo cuando no hay publicidad. El modelo reproduce la serie reservada para prueba con un error de \cifraAbmRmsePru\ puntos porcentuales.
+
+\keywords{Difusión de innovaciones \and Modelo de Bass \and Simulación basada en agentes \and Redes sociales \and NetLogo.}
+\end{abstract}
+
+\section{Introducción}
+
+Pocas tecnologías se han extendido tan rápido como el teléfono inteligente: en Estados Unidos pasó del 35\,\% de los adultos en 2011 a nueve de cada diez en 2024~\cite{pew2026}. Esa trayectoria ---lenta al principio, acelerada después y saturada al final--- es la curva en S que Rogers describió para la difusión de innovaciones~\cite{rogers2003} y que Bass formalizó con dos fuerzas: una influencia externa (publicidad y medios masivos) que actúa sobre todos por igual, y una influencia interna (imitación, ``voz a voz'') proporcional a cuántos ya adoptaron~\cite{bass1969}.
+
+El modelo de Bass describe bien las curvas agregadas, pero supone una población homogénea y perfectamente mezclada. En la realidad, las personas conocen una tecnología, la ven funcionar y la recomiendan dentro de una red social concreta, y esa estructura determina cuánta influencia social llega a quienes todavía no adoptan. Quedan así sin respuesta preguntas que interesan a quien diseña una campaña: ¿qué pasa si no hay publicidad? ¿Importa que la red sea más o menos densa, o que tenga unos pocos individuos muy conectados? ¿Cuánto se pierde si la campaña dura dos años en lugar de diez? La simulación basada en agentes responde a esas preguntas porque representa explícitamente a cada individuo, su red y su regla de decisión, y permite ejecutar escenarios contrafactuales que no se observan en los datos~\cite{goldenberg2001,rand2011}.
+
+El objetivo general es construir y calibrar un modelo basado en agentes de la difusión de una innovación para cuantificar el efecto de la publicidad y de la estructura de la red social sobre el porcentaje de adopción al final de un período. Los objetivos específicos son: (i) implementar en NetLogo la versión en red del modelo de Bass con tres generadores de redes; (ii) calibrarlo con una serie real mediante una partición cronológica en entrenamiento, validación y prueba; (iii) evaluar con réplicas los escenarios de publicidad, densidad, topología y duración de la campaña; y (iv) verificar la implementación con una réplica independiente.
+
+\section{Metodología}
+\label{sec:metodologia}
+
+\subsection{Modelo conceptual}
+
+El modelo agregado de Bass~\cite{bass1969} describe la fracción acumulada de adoptantes $F(t)$ mediante
+\begin{equation}
+  \frac{dF}{dt} = \bigl(p + q\,F(t)\bigr)\bigl(m - F(t)\bigr),
+  \label{eq:bass}
+\end{equation}
+donde $p$ es el coeficiente de innovación (influencia externa), $q$ el de imitación (influencia interna) y $m$ el potencial de mercado, la fracción de la población que puede llegar a adoptar; su solución cerrada es $F(t)=m\,(1-e^{-(p+q)t})/(1+\tfrac{q}{p}e^{-(p+q)t})$. La versión basada en agentes sustituye la mezcla perfecta por una red social explícita~\cite{goldenberg2001,rand2011}: cada agente $i$ es un nodo y, en cada mes, un agente que aún no ha adoptado lo hace con probabilidad
+\begin{equation}
+  P_i(t) = 1 - \bigl(1 - p\,a_t\bigr)\bigl(1 - q\,f_i(t)\bigr),
+  \label{eq:regla}
+\end{equation}
+donde $f_i(t)$ es la fracción de los vecinos de $i$ que ya adoptaron y $a_t\in\{0,1\}$ indica si la campaña publicitaria está activa en el mes $t$. Si la red fuera completa, $f_i$ coincidiría con la fracción global de adoptantes y~\eqref{eq:regla} recuperaría en promedio la dinámica de~\eqref{eq:bass}; la diferencia entre ambas curvas mide, por tanto, el efecto de la estructura de la red.
+
+Los supuestos son: la adopción es irreversible; las decisiones de un mes se toman con el estado de la red al inicio del mes y se aplican a la vez (actualización sincrónica); una fracción $m$ de los agentes, elegida al azar, forma el potencial de mercado y el resto nunca adopta pero permanece en la red y diluye la influencia de sus vecinos; al inicio ya adoptó un 2,5\,\% del potencial de mercado (los innovadores de Rogers~\cite{rogers2003}); y la red es estática. Se consideran tres familias de redes con el mismo grado promedio $k$: la aleatoria de Erdős--Rényi, donde cada par de nodos se conecta con probabilidad $k/(N-1)$; la de mundo pequeño de Watts--Strogatz~\cite{watts1998}, un anillo en el que cada nodo se une a sus $k/2$ vecinos de cada lado y cada arista se reconecta con probabilidad $\beta=0{,}1$, con alto agrupamiento y caminos cortos; y la libre de escala de Barabási--Albert, construida por conexión preferencial con $k/2$ aristas por nodo nuevo, que concentra muchas conexiones en unos pocos nodos.
+
+\subsection{Esquema del sistema}
+
+La Figura~\ref{fig:esquema} resume el sistema: la serie real alimenta la calibración del modelo de Bass, que entrega $p$, $q$ y $m$; con ellos, el modelo basado en agentes genera la red, siembra los adoptantes iniciales y aplica mes a mes la regla~\eqref{eq:regla}; los experimentos se definen en BehaviorSpace, la herramienta de NetLogo para barrer parámetros con réplicas, y sus tablas se analizan en Python.
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=0.8\textwidth]{esquema_sistema.pdf}
+  \caption{Esquema del sistema desarrollado. Arriba, el flujo de trabajo; abajo, el interior del modelo: la red social provee la fracción de vecinos adoptantes $f_i$, la campaña la señal $a_t$, y la regla de adopción decide el cambio de estado de cada agente.}
+  \label{fig:esquema}
+\end{figure}
+
+\subsection{Implementación en NetLogo}
+
+El modelo se implementó en NetLogo 6.4~\cite{wilensky1999} con la extensión \texttt{nw}, que genera las redes y mide su grado medio, agrupamiento y longitud media de camino. \texttt{setup} crea la red, marca el potencial de mercado y siembra los adoptantes iniciales; \texttt{go} ejecuta un mes en dos fases, \texttt{decidir} (cada no adoptante calcula $f_i$ y sortea su decisión con~\eqref{eq:regla}) y \texttt{actualizar} (aplica todas las decisiones a la vez, registra los nuevos adoptantes y el mes del 50\,\%, e integra~\eqref{eq:bass} como referencia). La interfaz expone los parámetros como deslizadores y muestra la red con los adoptantes resaltados, la curva de adopción frente a la de Bass, los nuevos adoptantes por mes y los monitores de desempeño; los cuatro experimentos están definidos en el mismo archivo.
+
+\subsection{Calibración}
+\label{sec:calibracion}
+
+Los parámetros de~\eqref{eq:bass} se estimaron por mínimos cuadrados no lineales sobre la partición de entrenamiento, con el origen temporal en junio de 2007 (lanzamiento del primer iPhone). Como esa partición cubre solo la fase de crecimiento, el potencial de mercado $m$ no es identificable, así que se trató como hiperparámetro: para cada $m$ de una rejilla entre 0,80 y 1,00 se estimaron $p$ y $q$ en entrenamiento y se eligió el $m$ con menor error en validación. Los coeficientes anuales se convirtieron en tasas mensuales ($p/12$, $q/12$). La repartición entre $p$ y $q$ es además sensible al origen temporal: distintos orígenes ajustan la curva casi igual con $q$ entre 0,06 y 0,33. Por ello los escenarios se evaluaron con dos niveles de imitación: el calibrado y el valor medio del metaanálisis de Sultan et al.~\cite{sultan1990} ($q\approx0{,}38$ anual, 0,032 mensual), típico de los bienes durables.
+
+\section{Conjunto de datos}
+\label{sec:datos}
+
+\textbf{Serie real.} Se usó la serie de tenencia de teléfono inteligente entre adultos de Estados Unidos del \emph{Mobile Fact Sheet} de Pew Research Center~\cite{pew2026}, una de las pocas series públicas que cubre la trayectoria completa de la categoría con encuestas representativas repetidas. Tiene 33 observaciones entre mayo de 2011 y junio de 2026; cada una registra la fecha de la encuesta, su año decimal y el porcentaje de adultos con smartphone. Por ejemplo: mayo de 2011 (2011,37), 35\,\%; enero de 2013, 51\,\%; noviembre de 2016, 77\,\%; febrero de 2021, 85\,\%; junio de 2026, 91\,\%. Las fechas con más de una encuesta se conservan completas.
+
+\textbf{Datos generados por la simulación.} Cada experimento produce una tabla con una fila por corrida y mes, con los parámetros y las medidas registradas (porcentaje de adopción, nuevos adoptantes, mes del 50\,\%, pico de nuevos adoptantes y propiedades de la red): 1710 corridas de 1000 agentes y más de 230\,000 filas en total, almacenadas como CSV junto con el modelo y los scripts.
+
+\section{Diseño experimental}
+\label{sec:diseno}
+
+\textbf{Partición.} La serie real se dividió cronológicamente en entrenamiento, 2011--2016 (26 observaciones), con el que se estiman $p$ y $q$; validación, 2018--2021 (3 observaciones), con el que se eligen $m$ y la estructura de red; y prueba, 2023--2026 (4 observaciones), que no interviene en ninguna decisión. Es desigual en observaciones porque Pew encuestó más en la fase de crecimiento, pero cubre lapsos comparables: seis, cuatro y cuatro años.
+
+\textbf{Medidas de desempeño.} La principal es el \emph{porcentaje de adopción al final del período}: la fracción de la población que ha adoptado a los 120 meses. Se reportan además el mes en que se alcanza el 50\,\% ($T_{50}$), que mide la velocidad del despegue, y el pico mensual de nuevos adoptantes. Frente a la serie real se usan la raíz del error cuadrático medio (RMSE, en puntos porcentuales) y el error porcentual absoluto medio (MAPE) entre la curva simulada promedio, evaluada en la fecha de cada encuesta, y el valor observado, por partición. Cada escenario se replicó 30 veces; se reportan medias e intervalos de confianza del 95\,\% ($t$ de Student).
+
+\textbf{Escenarios.} La Tabla~\ref{tab:experimentos} resume los cuatro experimentos. Salvo indicación contraria, $N=1000$, red de mundo pequeño con $\beta=0{,}1$ y $k=6$, potencial de mercado del 100\,\%, 2,5\,\% de adoptantes iniciales, $p=\cifraBassPmes$ mensual (calibrado), campaña activa los 120 meses y $q\in\{0{,}020;\,0{,}032\}$. El experimento de calibración reproduce las condiciones de la serie real: sin adoptantes iniciales, $m=\cifraBassM$\,\%, $q$ calibrado y 228 meses desde junio de 2007.
+
+\begin{table}[tb]
+  \centering
+  \caption{Diseño de los experimentos (30 réplicas por combinación).}
+  \label{tab:experimentos}
+  \footnotesize
+  \setlength{\tabcolsep}{4pt}
+  \begin{tabular}{llr}
+    \toprule
+    exp. & factores y niveles & corridas \\
+    \midrule
+    E1 & publicidad \{sin, con\} $\times$ densidad $k\in\{2,4,6,8,12,16\}$ $\times$ $q$ & 720 \\
+    E2 & topología \{aleatoria, mundo pequeño, libre de escala\} $\times$ publicidad $\times$ $q$ & 360 \\
+    E3 & duración de la campaña \{0, 6, 12, 24, 60, 120\} meses $\times$ $q$ & 360 \\
+    E4 & calibración: topología (3) $\times$ $k\in\{4,8,16\}$, $q$ calibrado, 228 meses & 270 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\textbf{Verificación.} La misma regla se implementó de forma independiente en Python con \texttt{networkx} y se repitieron los experimentos; las medias de adopción final de ambas implementaciones deben coincidir dentro de los intervalos de confianza.
+
+\section{Resultados}
+\label{sec:resultados}
+
+\subsection{Calibración y validación con datos reales}
+
+El ajuste en entrenamiento arrojó $p=\cifraBassP$ y $q=\cifraBassQ$ (anuales) y, por validación, $m=\cifraBassM$\,\%. La Tabla~\ref{tab:calibracion} compara el error del modelo de Bass con el del modelo basado en agentes. Con los mismos coeficientes, todas las redes producen curvas algo más lentas que la agregada, porque los adoptantes se agrupan y parte de su influencia recae sobre vecinos que ya adoptaron; el efecto es mayor en las redes dispersas (hasta \cifraAbmRmseValMax\ puntos en validación para la red \cifraAbmPeorRed\ con $k=\cifraAbmPeorK$) y menor en las densas. La estructura seleccionada fue la red \cifraAbmSelRed\ con $k=\cifraAbmSelK$, cuyo error en prueba es de \cifraAbmRmsePru\ puntos porcentuales (MAPE \cifraAbmMapePru\,\%), comparable al del modelo agregado (\cifraBassRmsePru). En la Figura~\ref{fig:calibracion}, ambos modelos quedan ligeramente por debajo de las observaciones más recientes: el potencial de mercado elegido en validación es conservador.
+
+\input{tablas/tabla_calibracion}
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=0.74\textwidth]{fig_calibracion.pdf}
+  \caption{Serie real por partición, curva del modelo de Bass ajustado y curva media (banda: IC 95\,\%) del modelo basado en agentes con la estructura elegida en validación.}
+  \label{fig:calibracion}
+\end{figure}
+
+\subsection{Difusión sin publicidad frente a campaña activa y densidad de la red}
+
+La Figura~\ref{fig:escenarios}(a, b) muestra las curvas de adopción de E1 para dos densidades y la Tabla~\ref{tab:densidad} los valores finales. Sin publicidad, la difusión depende solo de los innovadores iniciales y avanza con lentitud: con el coeficiente calibrado la adopción a diez años va de \cifraSinCalKDos\,\% en la red más dispersa ($k=2$) a \cifraSinCalKDieciseis\,\% en la más densa ($k=16$), y con el de la literatura de \cifraSinLitKDos\,\% a \cifraSinLitKDieciseis\,\%; en ningún escenario sin campaña la mayoría de las réplicas alcanza el 50\,\%. Con campaña permanente la curva toma la forma de S y la adopción final queda entre \cifraConCalKDos\,\% y \cifraConCalKDieciseis\,\% (calibrado) o entre \cifraConLitKDos\,\% y \cifraConLitKDieciseis\,\% (literatura), con el 50\,\% hacia el mes \cifraTcincuentaConCalKSeis\ o \cifraTcincuentaConLitKSeis.
+
+La densidad actúa de forma asimétrica. Sin publicidad, pasar de $k=2$ a $k=16$ multiplica la adopción final por \cifraDensidadRazonSinCal\ con el coeficiente calibrado y por \cifraDensidadRazonSinLit\ con el de la literatura, porque cada adoptante tiene más vecinos a quienes contagiar y el contagio escapa antes de los grupos locales. Con campaña, el mismo cambio solo añade unos \cifraDensidadGananciaCon\ puntos: la publicidad siembra adoptantes en todas las regiones de la red, y la estructura deja de importar.
+
+\begin{figure}[tb]
+  \centering
+  \includegraphics[width=0.95\textwidth]{fig_escenarios.pdf}
+  \caption{(a, b) Curvas medias de adopción (banda: IC 95\,\%) con y sin campaña en redes de mundo pequeño dispersas ($k=4$) y densas ($k=12$), con el coeficiente de imitación calibrado (a) y el de la literatura (b). (c) Adopción final a 120 meses según la duración de la campaña (media e IC 95\,\%).}
+  \label{fig:escenarios}
+\end{figure}
+
+\input{tablas/tabla_densidad}
+
+\subsection{Topología de la red}
+
+En E2 se comparan las tres topologías con el mismo grado promedio ($k=6$). La red de mundo pequeño tiene un agrupamiento muy superior ($C=\cifraEstMundoC$ frente a \cifraEstAleatoriaC\ en la aleatoria y \cifraEstEscalaC\ en la libre de escala) y la libre de escala los caminos más cortos (longitud media \cifraEstEscalaL\ frente a \cifraEstMundoL\ en mundo pequeño). Con campaña las tres convergen al mismo nivel (\cifraTopoConLitMundo\,\% a \cifraTopoConLitAleatoria\,\% con $q=0{,}032$). Sin campaña aparecen diferencias: la de mundo pequeño es la más lenta (\cifraTopoSinLitMundo\,\%), porque su alto agrupamiento hace que los vecinos de un adoptante sean también vecinos entre sí y la influencia se concentre en grupos ya convencidos; la aleatoria y la libre de escala difunden más (\cifraTopoSinLitAleatoria\,\% y \cifraTopoSinLitEscala\,\%). La libre de escala es además la más variable (desviación estándar de \cifraTopoSinLitEscalaDe\ puntos frente a \cifraTopoSinLitMundoDe): cuando un nodo muy conectado adopta temprano desencadena una cascada; cuando no, la difusión se estanca.
+
+\subsection{Duración de la campaña}
+
+El experimento E3 interrumpe la campaña después de un número dado de meses (Figura~\ref{fig:escenarios}(c)). El rendimiento es fuertemente decreciente: con el coeficiente calibrado, seis meses de publicidad elevan la adopción final de \cifraDurCalDCero\,\% a \cifraDurCalDSeis\,\%, dos años la llevan a \cifraDurCalDVeinticuatro\,\% y cinco a \cifraDurCalDSesenta\,\%, frente a \cifraDurCalDCientoveinte\,\% con publicidad permanente; con el de la literatura, dos años bastan para \cifraDurLitDVeinticuatro\,\%, porque la imitación sostiene la difusión una vez sembrados suficientes adoptantes. La publicidad vale más al comienzo, cuando la influencia social es débil, y se vuelve prescindible cuando la red difunde por sí misma.
+
+\section{Conclusiones}
+\label{sec:conclusiones}
+
+Se construyó en NetLogo un modelo basado en agentes de la difusión de una innovación sobre redes sociales, calibrado con la serie de adopción de smartphones de Pew Research Center y validado con una partición cronológica. El modelo reproduce la serie reservada para prueba con un error de \cifraAbmRmsePru\ puntos porcentuales, comparable al del modelo agregado de Bass, y añade lo que este no ofrece: escenarios contrafactuales. Primero, con los coeficientes calibrados la difusión orgánica es demasiado lenta para alcanzar a la mayoría en una década (menos del \cifraSinCalKDieciseis\,\% sin campaña frente a más del \cifraConCalKDos\,\% con campaña permanente): la publicidad no es un acelerador sino la condición del despegue. Segundo, su efecto se concentra en los primeros meses, así que una campaña corta al inicio rinde casi tanto como una permanente, sobre todo cuando la imitación es fuerte. Tercero, la densidad y la topología solo alteran el resultado cuando la difusión es orgánica: más densidad y caminos más cortos aceleran, el agrupamiento frena. Las limitaciones son los coeficientes homogéneos, la red estática y sin abandono, la repartición entre $p$ y $q$ mal identificada con datos agregados (mitigada con dos niveles de $q$) y la serie de calibración de Estados Unidos, pues no existe una colombiana pública comparable. Como trabajo futuro se propone incorporar umbrales de adopción heterogéneos, redes dinámicas y una calibración con datos locales.
+
+\bibliographystyle{splncs04}
+\bibliography{referencias}
+
+\end{document}
