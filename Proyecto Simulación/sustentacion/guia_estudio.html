@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="utf-8"><title>Guía de estudio · Difusión de innovaciones: PS5 y GTA 6</title></head>
+<body>
+
+<h1>Guía de estudio · Difusión de innovaciones: PS5 y GTA 6</h1>
+<p>Proyecto 14 · Simulación Computacional · Universidad de los Llanos. Integrantes: Jesus Gregorio Delgado, David Andres Monroy Aguiar y Duvan Felipe Baquero Cerquera. Sustentación: 15 minutos.</p>
+<p>Esta guía explica todo el proyecto con las cifras finales. Todas salen del mismo análisis que el artículo y las diapositivas, así que coinciden. Lean primero la sección 1 y la tabla de cifras (sección 12); el resto sirve para responder preguntas.</p>
+
+<h2>1. El proyecto en un minuto</h2>
+<p>Construimos en NetLogo un <b>modelo basado en agentes</b> de cómo se difunde un producto nuevo. Cada persona es un nodo de una red social y cada mes decide si adopta, influida por dos fuerzas: la <b>publicidad</b> (influencia externa, llega a todos) y la <b>imitación</b> de sus contactos (influencia interna). Lo aplicamos a dos casos:</p>
+<ul>
+<li><b>PS5 (la tecnología):</b> calibrada y validada con la serie oficial de ventas de Sony, 2020–2026.</li>
+<li><b>GTA 6 (la innovación):</b> se difunde entre los dueños de PS5; como sale el 19 de noviembre de 2026 y no tiene ventas todavía, sus parámetros salen por analogía con el lanzamiento de GTA V (2013).</li>
+</ul>
+<p>Comparamos escenarios con 30 réplicas: sin publicidad frente a campaña activa, redes más o menos densas, tres topologías y campañas de distinta duración. La medida principal es el <b>porcentaje de adopción al final del período</b> (6 años para la PS5, 2 para GTA 6).</p>
+<p><b>Los tres mensajes:</b> (1) en la PS5, que crece por imitación, la publicidad es la condición del despegue: sin campaña no pasa del 23,5 % en ninguna red, con campaña llega al menos al 73,3 %; (2) en GTA 6, que se vende por la campaña de lanzamiento, el primer mes decide casi todo (71 % del efecto) y la red casi no importa; (3) la red pesa sobre todo cuando no hay publicidad. El modelo sigue los datos de prueba de la PS5 con 4,91 puntos de error (Bass: 3,22).</p>
+
+<h2>2. Cómo cumplimos el enunciado y la guía</h2>
+<table border="1">
+<tr><th>Pide</th><th>Dónde está</th></tr>
+<tr><td>Simular cómo una tecnología nueva se adopta por redes sociales o influencia masiva</td><td>Modelo de agentes en NetLogo; caso PS5 (tecnología) y GTA 6 (innovación)</td></tr>
+<tr><td>Agentes que deciden por vecinos o publicidad</td><td>Regla P = 1 − (1 − p·a)(1 − q·f): publicidad p, imitación q por la fracción f de vecinos que adoptó</td></tr>
+<tr><td>Medida: porcentaje de adopción al final del período</td><td>Medida principal de todos los experimentos</td></tr>
+<tr><td>Escenarios: sin publicidad vs. campaña; redes más o menos densas</td><td>Experimento E1 (y E2, E3 de complemento)</td></tr>
+<tr><td>Agentes o dinámica de sistemas; AnyLogic o NetLogo</td><td>Agentes en NetLogo 7.0.4 con la extensión nw</td></tr>
+<tr><td>Artículo LNCS de 4 a 8 páginas con resumen, introducción, metodología con esquema, datos, diseño experimental con partición y medidas, resultados y 3–8 referencias</td><td>articulo/main.tex (8 referencias)</td></tr>
+<tr><td>Presentación de 15–20 diapositivas</td><td>presentacion/presentacion.pdf (19 diapositivas)</td></tr>
+<tr><td>Demo de la implementación</td><td>Diapositiva 17 y sección 10 de esta guía</td></tr>
+</table>
+
+<h2>3. Conceptos clave</h2>
+<h3>Difusión de innovaciones y curva en S</h3>
+<p>Rogers describió que una innovación se adopta primero por pocos (innovadores, el 2,5 %), luego se acelera con la mayoría y al final se satura: la <b>curva en S</b>. La <b>adopción acumulada</b> es el total que ya adoptó hasta un mes (la S); los <b>adoptantes nuevos</b> por mes forman una campana. Como nadie abandona, adopción acumulada y porcentaje de adopción son la misma cifra.</p>
+<h3>Modelo de Bass: p, q y m</h3>
+<p>Ecuación: dF/dt = (p + q·F)(m − F), con F la fracción que ya adoptó.</p>
+<ul>
+<li><b>p, coeficiente de innovación (publicidad):</b> probabilidad de adoptar por influencia externa, sin importar lo que hagan los demás.</li>
+<li><b>q, coeficiente de imitación (voz a voz):</b> se multiplica por la fracción que ya adoptó; si nadie ha adoptado, no actúa.</li>
+<li><b>m, potencial de mercado:</b> fracción de la población que llegaría a adoptar.</li>
+</ul>
+<p><b>Regla para recordar:</b> si q es mayor que p, la curva es una S (PS5: q/p = 4,6); si p es mayor que q, las ventas son máximas al inicio y luego caen (GTA 6: p/q = 18). Los valores anuales se pasan a mensuales dividiendo entre 12.</p>
+<h3>Modelo basado en agentes</h3>
+<p>Cada mes, cada agente que no ha adoptado lo hace con probabilidad <b>P = 1 − (1 − p·a)(1 − q·f)</b>: a = 1 si la campaña está activa (0 si no) y f es la fracción de sus vecinos que ya adoptó. Es "al menos una de las dos fuerzas lo convence". Ejemplo con la PS5 (p = 0,0081, q = 0,0375 mensuales): con campaña y la mitad de sus vecinos adoptantes, P = 1 − (1 − 0,0081)(1 − 0,0375 × 0,5) ≈ 2,7 % al mes.</p>
+<ul>
+<li><b>Actualización sincrónica:</b> todos deciden con el estado del inicio del mes y los cambios se aplican a la vez; así el orden en que NetLogo recorre a los agentes no cambia el resultado.</li>
+<li><b>Irreversible:</b> quien adopta no abandona.</li>
+<li><b>Potencial de mercado:</b> solo una fracción m de agentes puede adoptar; el resto sigue en la red y diluye la influencia.</li>
+<li><b>Relación con Bass:</b> si la red fuera completa (todos conectados con todos), la regla da la curva de Bass; la diferencia entre la curva de agentes y la de Bass es el efecto de la red. En una red, parte de la influencia cae sobre vecinos que ya adoptaron y se "desperdicia", por eso la curva de agentes avanza más despacio que la de Bass.</li>
+</ul>
+<h3>Las tres redes</h3>
+<ul>
+<li><b>Aleatoria (Erdős–Rényi):</b> cada par se conecta al azar. Línea base.</li>
+<li><b>Mundo pequeño (Watts–Strogatz):</b> anillo donde cada nodo se une a sus vecinos cercanos y el 10 % de los enlaces se reconecta al azar. Mucho <b>agrupamiento</b> (mis amigos son amigos entre sí) y caminos cortos. Es la red de los escenarios E1 a E3 (k = 16).</li>
+<li><b>Libre de escala (Barabási–Albert):</b> pocos nodos con muchísimos contactos (hubs, como influenciadores).</li>
+<li><b>Grado promedio k:</b> número medio de contactos; mide la densidad de la red.</li>
+</ul>
+
+<h2>4. Los datos</h2>
+<h3>Serie real de la PS5</h3>
+<ul>
+<li>Fuente: Sony Interactive Entertainment, <i>Business Data &amp; Sales</i>. Unidades vendidas a tiendas (sell-in) por trimestre fiscal: 24 trimestres, de diciembre de 2020 a septiembre de 2026, de 4,5 a 97,9 millones acumulados.</li>
+<li><b>Porcentaje de adopción = acumulado / 117 millones</b>, la base instalada de PS4 (más de 117 millones según Sony). Se fijó antes de mirar la prueba para no hacer trampa. Al último trimestre la PS5 va en 83,7 % de esa base.</li>
+<li>Control posterior: Sony informó más de 100 millones al 10 de noviembre de 2026 (al menos 85,5 %).</li>
+</ul>
+<h3>Partición (por fechas, no al azar)</h3>
+<table border="1">
+<tr><th>Partición</th><th>Trimestres</th><th>Para qué</th></tr>
+<tr><td>Entrenamiento: dic-2020 a dic-2023</td><td>13</td><td>Estimar p y q por mínimos cuadrados</td></tr>
+<tr><td>Validación: mar a dic-2024</td><td>4</td><td>Elegir m y la estructura de red</td></tr>
+<tr><td>Prueba: mar-2025 a sep-2026</td><td>7</td><td>Solo medir el error final</td></tr>
+</table>
+<p>Es cronológica porque es una serie de tiempo: mezclar años filtraría información del futuro al ajuste.</p>
+<h3>Analogía con GTA V</h3>
+<ul>
+<li>GTA V salió el 17-sep-2013 para PS3 y Xbox 360 (160 millones de consolas instaladas: 80 + 80).</li>
+<li>Take-Two (cifras oficiales, unidades vendidas a tiendas): casi 29 millones a las seis semanas, 32,5 en febrero de 2014, 33 en mayo y 34 en agosto de 2014 (meseta: 21,2 % de la base).</li>
+<li>Primer día: 11,21 millones según Guinness World Records (con datos de Rockstar; Take-Two no publicó esa cifra en unidades).</li>
+<li>Ajuste: con m = meseta, q = el de la PS5 y el primer día fijo, el mejor p es 0,69 al mes (error de 0,53 puntos).</li>
+<li>GTA 6 en el modelo: población = dueños de PS5; potencial 21 %; 7 % de compradores el primer día; p = 0,69; q = 0,0375; 24 meses.</li>
+<li>Por qué analogía: es el método estándar para pronosticar un producto antes del lanzamiento (Thomas, 1985). Dato de apoyo: Sensor Tower estimó unos 5,7 millones de reservas digitales en PS5 al 3-nov-2026, del mismo orden que el 7 % del primer día.</li>
+</ul>
+<h3>Datos generados por la simulación</h3>
+<p>1770 corridas de 1000 agentes (93 750 filas de CSV), con parámetros y medidas por mes.</p>
+
+<h2>5. Calibración y validación</h2>
+<ul>
+<li>Bass en entrenamiento: <b>p = 0,097, q = 0,449 anuales</b> (mensuales 0,0081 y 0,0375).</li>
+<li><b>m = 100 %</b>, elegido en validación entre 80 % y 100 %; el error de validación bajó hasta el tope, así que m = 100 % es un supuesto conservador. El potencial no se puede estimar en plena fase de crecimiento (el ajuste libre lo lleva al tope), por eso se elige en validación. Quedó en el tope: con toda la serie, el ajuste sugiere que la PS5 terminará en unos 125 millones, más que la PS4.</li>
+<li>Modelo de agentes: 9 estructuras (3 redes × k = 4, 8, 16). La elegida en validación fue la <b>red de mundo pequeño con k = 16</b>, aunque las tres topologías con k = 16 quedan muy cerca. La peor fue la red aleatoria con k = 4 (7,06 puntos en validación): en las redes dispersas la difusión es más lenta.</li>
+<li><b>Error en prueba:</b> agentes 4,91 puntos (MAPE 6,2 %); Bass 3,22 (MAPE 3,9 %).</li>
+<li>Al 10-nov-2026 los modelos dan 80,2 % (agentes) y 81,9 % (Bass) frente a más de 85,5 % real: se quedan algo cortos al final porque m quedó en el tope.</li>
+</ul>
+
+<h2>6. Experimentos y medidas</h2>
+<table border="1">
+<tr><th>Exp.</th><th>Factores</th><th>Corridas</th></tr>
+<tr><td>E1</td><td>caso (PS5, GTA 6) × publicidad (sin, con) × k ∈ {2, 4, 6, 8, 12, 16}; mundo pequeño</td><td>720</td></tr>
+<tr><td>E2</td><td>caso × publicidad × topología (aleatoria, mundo pequeño, libre de escala); k = 16</td><td>360</td></tr>
+<tr><td>E3</td><td>caso × duración de la campaña (0, 1, 3, 6, 12, 24 meses, permanente); mundo pequeño, k = 16</td><td>420</td></tr>
+<tr><td>E4</td><td>calibración PS5: 3 topologías × k ∈ {4, 8, 16}; sin adoptantes iniciales; 74 meses</td><td>270</td></tr>
+</table>
+<ul>
+<li>Cada combinación: 30 réplicas, 1000 agentes.</li>
+<li>PS5 en escenarios: 2,5 % de innovadores (Rogers) para que el escenario sin campaña pueda arrancar; horizonte 72 meses. GTA 6: 7 % del primer día; horizonte 24 meses. Sin campaña significa p = 0 desde el lanzamiento: se quita toda influencia externa (publicidad y medios), así que la diferencia es una cota superior del efecto de la publicidad.</li>
+<li><b>Medidas:</b> adopción final (principal); mes del 50 %; mes del pico de compras; frente a la serie real, RMSE (raíz del error cuadrático medio, en puntos porcentuales) y MAPE (error porcentual absoluto medio); media e intervalo de confianza del 95 % con t de Student, que recoge la variación entre réplicas, no la incertidumbre de p, q y m.</li>
+</ul>
+
+<h2>7. Resultados con cifras</h2>
+<h3>Publicidad (E1)</h3>
+<ul>
+<li>PS5 sin campaña: 8,6 % (k = 2) a 21,1 % (k = 16) a seis años; nunca llega al 50 %.</li>
+<li>PS5 con campaña: 73,3 % a 82,6 %; curva en S; mes del 50 % con k = 16: 39.</li>
+<li>GTA 6 con campaña: 20,7 % a 21,3 % (todo el potencial); pico de compras en el mes 1.</li>
+<li>GTA 6 sin campaña: 7,8 % a 7,9 %: apenas por encima del 7 % del primer día.</li>
+</ul>
+<h3>Densidad (E1)</h3>
+<ul>
+<li>PS5 sin campaña: de k = 2 a k = 16 la adopción se multiplica por <b>2,5</b> (+12,5 puntos). Con campaña solo por 1,1 (+9,3 puntos): en puntos el efecto es parecido, pero en términos relativos la densidad pesa mucho más sin publicidad.</li>
+<li>GTA 6: la densidad casi no cambia nada (sin campaña 7,8–7,9 %).</li>
+<li>Por qué: sin publicidad, la difusión depende de que la influencia salte de un grupo a otro; con más contactos salta antes. Con publicidad, la campaña siembra adoptantes en toda la red y la estructura pesa mucho menos.</li>
+</ul>
+<h3>Topología (E2, k = 16)</h3>
+<ul>
+<li>Agrupamiento: mundo pequeño 0,514, aleatoria 0,016, libre de escala 0,058.</li>
+<li>PS5 sin campaña: mundo pequeño 20,4 %, aleatoria 23,5 %, libre de escala 22,5 % (desviación estándar 5,8, frente a 3,6 en la aleatoria y 3,1 en la de mundo pequeño).</li>
+<li>Con campaña convergen: PS5 82,3 %–83,0 %.</li>
+<li>Interpretación: el agrupamiento frena (la influencia se queda en grupos ya convencidos); en la libre de escala el resultado depende de si un hub adopta temprano, por eso varía más.</li>
+</ul>
+<h3>Duración de la campaña (E3)</h3>
+<table border="1">
+<tr><th>Meses de campaña</th><th>0</th><th>1</th><th>3</th><th>6</th><th>12</th><th>24</th><th>permanente</th></tr>
+<tr><td>PS5 (adopción a 72 meses, %)</td><td>20,7</td><td>25,9</td><td>33,8</td><td>43,8</td><td>54,9</td><td>67,8</td><td>83,1</td></tr>
+<tr><td>GTA 6 (adopción a 24 meses, %)</td><td>7,9</td><td>17,4</td><td>20,9</td><td>21,2</td><td>21,3</td><td>20,7</td><td>21,3</td></tr>
+</table>
+<p><b>Fracción del efecto</b> = (adopción con d meses − sin campaña) / (permanente − sin campaña). GTA 6: un mes logra el 71 % y tres meses el 97 %. PS5: un año el 55 % y dos años el 75 %.</p>
+
+<h2>8. Verificación</h2>
+<p>La misma regla se programó aparte en Python (networkx) y se corrieron los mismos cuatro experimentos, leyendo los diseños del archivo de NetLogo. En 59 escenarios, la adopción final media difiere en 0,41 puntos en promedio (1,6 como máximo); con la prueba t de Welch, 2 difieren sin corregir (lo esperable por azar en 59 pruebas) y con la corrección de Holm ninguna diferencia es significativa. Además, con la red completa el modelo recupera la curva de Bass (diferencia máxima de 0,4 puntos).</p>
+
+<h2>9. Conclusiones y limitaciones</h2>
+<ol>
+<li>En una tecnología que crece por imitación (PS5), la publicidad es la condición del despegue y su efecto se acumula con los meses.</li>
+<li>En un lanzamiento dominado por la publicidad (GTA 6), el primer mes decide el resultado y la red casi no importa.</li>
+<li>La red pesa sobre todo cuando la difusión es orgánica: más densidad acelera, el agrupamiento frena.</li>
+<li>El modelo quedó validado con datos que no usamos para ajustar y verificado con una reimplementación independiente.</li>
+</ol>
+<p><b>Limitaciones:</b> todos los agentes tienen los mismos p y q; la red no cambia y nadie abandona; Sony y Take-Two reportan unidades vendidas a tiendas, no personas (alguien pudo comprar dos consolas); los parámetros de GTA 6 son hipotéticos (los analistas esperan entre 46 y 51 millones en la semana de lanzamiento, cerca del doble de lo que implica la analogía). Lo comprobamos: con el potencial y los compradores del primer día duplicados (42 % y 14 %), sin campaña se llega al 17,7 % y con campaña al 41,8 %, y un mes logra el 73 % del efecto: sube el nivel, no el papel de la campaña. Además, el nivel sin campaña de la PS5 depende de la semilla de innovadores: 8,7 % con 1 %, 19,6 % con 2,5 % y 34,8 % con 5 % (con campaña, 81,0–84,5 %). <b>Trabajo futuro:</b> contrastar con las primeras ventas de GTA 6 y calibrar con datos colombianos.</p>
+
+<h2>10. Implementación en NetLogo y demostración</h2>
+<ul>
+<li><b>setup:</b> borra todo, aplica el caso (<b>aplicar-caso</b>), crea la red (<b>crear-red</b> con nw:generate-random, nw:generate-watts-strogatz o nw:generate-preferential-attachment), marca el potencial de mercado, siembra adoptantes iniciales y mide la red (grado medio, agrupamiento, camino medio).</li>
+<li><b>go:</b> un mes = <b>decidir</b> (cada no adoptante calcula f y sortea con la fórmula) + <b>actualizar</b> (aplica todas las decisiones a la vez, cuenta nuevos, registra pico y mes del 50 % e integra Bass como referencia).</li>
+<li><b>Selector caso:</b> "PS5 (tecnología)" carga p = 0,0081, q = 0,0375, m = 100 %, 2,5 % iniciales, 72 meses; "GTA 6 (innovación)" carga p = 0,69, q = 0,0375, m = 21 %, 7 % iniciales, 24 meses; "libre" usa los deslizadores.</li>
+<li><b>Colores:</b> gris no adopta, azul adoptante, naranja adoptó este mes, gris oscuro fuera del potencial.</li>
+<li><b>BehaviorSpace</b> (Herramientas): los cuatro experimentos. Sin interfaz: modelo/correr_experimentos.bat.</li>
+</ul>
+<p><b>Demo (David, 1:10):</b> 1) GTA 6 → configurar → simular: pico en el primer mes. 2) campaña apagada: casi no pasa del 7 %. 3) PS5 con campaña: curva en S frente a Bass. Solo si sobra tiempo: 4) PS5 sin campaña y k = 2: se frena; 5) mostrar BehaviorSpace.</p>
+
+<h2>11. Preguntas probables y respuestas</h2>
+<p><b>¿Por qué PS5 y GTA 6 y no smartphones?</b> El enunciado da los smartphones como ejemplo. Elegimos dos productos de actualidad que representan los dos regímenes de Bass: la PS5, una tecnología que crece por imitación (curva en S), y GTA 6, un contenido que se vende por la campaña (ventas al inicio). Así el modelo muestra los dos comportamientos y es un caso que el público conoce.</p>
+<p><b>¿Un videojuego es una "tecnología"?</b> El título del proyecto dice "innovación o tecnología". La PS5 es la tecnología y GTA 6 la innovación (Rogers define innovación como algo percibido como nuevo).</p>
+<p><b>¿Cómo pueden simular GTA 6 si no ha salido?</b> Con el método de analogía (Thomas, 1985): los parámetros salen del producto anterior más parecido, GTA V. Es un escenario hipotético, no un pronóstico; por eso lo presentamos así y decimos qué esperan los analistas.</p>
+<p><b>¿Por qué 117 millones como 100 %?</b> Es la base instalada de la generación anterior, el mercado natural de la PS5, y la fijamos antes de ver la prueba. La PS5 puede superarla; por eso m quedó en el tope y los modelos se quedan algo cortos al final.</p>
+<p><b>¿Qué papel tiene cada partición?</b> Entrenamiento estima p y q. Validación elige m y la red. Prueba solo mide el error final.</p>
+<p><b>¿Por qué m no se estima en entrenamiento?</b> Con datos de la fase de crecimiento muchas combinaciones de p, q y m ajustan casi igual; el ajuste libre lleva m a la cota máxima (300 %). Por eso es un hiperparámetro que se elige en validación.</p>
+<p><b>¿Qué son RMSE y MAPE?</b> RMSE es la raíz del promedio de los errores al cuadrado, en puntos porcentuales. MAPE es el promedio del error relativo absoluto, en %. Agentes en prueba: 4,91 puntos y 6,2 %.</p>
+<p><b>¿Por qué el error del modelo de agentes (4,91) es mayor que el de Bass (3,22)?</b> El modelo de agentes usa los p y q que se ajustaron con Bass; en una red la difusión es más lenta, así que todas las estructuras quedan algo por debajo de la serie. Lo que aporta el modelo de agentes no es un mejor ajuste, sino poder probar escenarios con la red.</p>
+<p><b>¿Por qué la curva de agentes va por debajo de la de Bass?</b> En una red, los adoptantes se agrupan: parte de su influencia recae en vecinos que ya adoptaron y se desperdicia. En la mezcla perfecta no pasa. Por eso las redes densas se acercan más a Bass.</p>
+<p><b>¿La elección de la red es robusta?</b> Lo robusto es que gana una red densa (k = 16): el error baja con k en las tres topologías. Entre las tres topologías con k = 16 la diferencia es pequeña (3,20 frente a 3,31 puntos) y puede cambiar con otras réplicas; por eso no sacamos conclusiones de cuál topología ganó.</p>
+<p><b>¿Por qué la misma red da 21,1, 20,4 y 20,7 % sin campaña?</b> Son la misma configuración (PS5, mundo pequeño, k = 16, sin campaña) en tres experimentos con réplicas distintas; las diferencias caben en los intervalos de confianza.</p>
+<p><b>¿Qué tan sensible es el resultado a la semilla de innovadores?</b> El nivel sin campaña es casi proporcional a la semilla (8,7 % con 1 %, 34,8 % con 5 %), pero con campaña siempre se llega a más del 81,0 %: la conclusión no cambia.</p>
+<p><b>¿"Sin publicidad" significa sin ningún tipo de influencia externa?</b> Sí: con p = 0 desaparecen la publicidad, los medios, las reseñas y todo lo externo. Por eso la diferencia entre escenarios es una cota superior del efecto de la publicidad.</p>
+<p><b>¿Por qué 30 réplicas?</b> Cada corrida es aleatoria; con 30, el intervalo del 95 % de la media es estrecho frente a las diferencias entre escenarios.</p>
+<p><b>¿Qué es la actualización sincrónica?</b> Todos deciden con el estado del inicio del mes y los cambios se aplican a la vez; si se aplicaran uno por uno, el orden en que NetLogo recorre los agentes cambiaría el resultado.</p>
+<p><b>¿Por qué la PS5 sin campaña tiene 2,5 % de innovadores y en la calibración no?</b> En la calibración la serie real empieza en cero y la publicidad hace el arranque. En el escenario sin publicidad, sin nadie que empiece no habría difusión; el 2,5 % son los innovadores de Rogers.</p>
+<p><b>¿Por qué en GTA 6 la red no importa?</b> Porque la publicidad (p = 0,69 al mes) es 18 veces más fuerte que la imitación: casi todos los interesados compran por la campaña en el primer mes, antes de que la red tenga tiempo de actuar. Además solo el 21 % de los dueños de PS5 son compradores potenciales, así que la fracción de vecinos que ya lo tiene es pequeña.</p>
+<p><b>¿Cómo verificaron el modelo?</b> Con una reimplementación independiente en Python: 59 escenarios, diferencia media de 0,41 puntos; 2 difieren sin corregir, lo esperable por azar, y con Welch + Holm ninguna diferencia es significativa. Además, con la red completa el modelo recupera a Bass (diferencia máxima de 0,4 puntos).</p>
+<p><b>¿Por qué NetLogo y no AnyLogic?</b> Es libre, el modelo completo cabe en un archivo, BehaviorSpace automatiza las réplicas y la extensión nw trae los generadores de redes y sus métricas.</p>
+<p><b>¿Qué cambiaría con una red dinámica o con abandono?</b> No está en el modelo; son extensiones. Con abandono la curva bajaría al final; con una red que cambia, la influencia podría llegar a más grupos.</p>
+<p><b>¿Las ventas a tiendas son personas?</b> No: son unidades enviadas a tiendas (sell-in), y alguien pudo comprar dos consolas. Suponemos una consola por comprador y lo declaramos como limitación.</p>
+
+<h2>12. Cifras para memorizar</h2>
+<table border="1">
+<tr><th>Qué</th><th>Cifra</th></tr>
+<tr><td>PS5 vendidas (sep-2026)</td><td>97,9 millones (83,7 % de la base de PS4)</td></tr>
+<tr><td>Bass PS5 (anual)</td><td>p = 0,097, q = 0,449, m = 100 %</td></tr>
+<tr><td>Red elegida en validación</td><td>red de mundo pequeño, k = 16</td></tr>
+<tr><td>Error en prueba</td><td>agentes 4,91 pp · Bass 3,22 pp</td></tr>
+<tr><td>GTA 6 (mensual)</td><td>p = 0,69, q = 0,0375, m = 21 %, 7 % el primer día</td></tr>
+<tr><td>PS5 sin / con campaña (E1)</td><td>8,6–21,1 % / 73,3–82,6 % (sin campaña, máximo en todas las redes: 23,5 %)</td></tr>
+<tr><td>GTA 6 sin / con campaña</td><td>7,8–7,9 % / 20,7–21,3 %</td></tr>
+<tr><td>Densidad PS5, k 2 → 16</td><td>× 2,5 sin campaña; × 1,1 con campaña</td></tr>
+<tr><td>Un mes de campaña en GTA 6</td><td>71 % del efecto</td></tr>
+<tr><td>Un año / dos años de campaña en la PS5</td><td>55 % / 75 % del efecto</td></tr>
+<tr><td>Corridas simuladas</td><td>1770</td></tr>
+<tr><td>Verificación (Python)</td><td>diferencia media 0,41 pp; ninguna diferencia es significativa</td></tr>
+</table>
+
+<h2>13. Reparto de la sustentación</h2>
+<table border="1">
+<tr><th>Bloque</th><th>Diapositivas</th><th>Quién</th><th>Tiempo</th></tr>
+<tr><td>Apertura, planteamiento y modelo</td><td>1–6</td><td>Jesus</td><td>0:00 – 4:45</td></tr>
+<tr><td>Sistema, implementación, datos y diseño experimental</td><td>7–11</td><td>David</td><td>4:45 – 8:35</td></tr>
+<tr><td>Medidas y resultados</td><td>12–16</td><td>Duvan</td><td>8:35 – 12:15</td></tr>
+<tr><td>Demostración en NetLogo</td><td>17</td><td>David</td><td>12:15 – 13:25</td></tr>
+<tr><td>Conclusiones y referencias</td><td>18–19</td><td>Duvan</td><td>13:25 – 14:05</td></tr>
+</table>
+<p>El plan suma unos 14 minutos: queda un minuto de margen para los cambios de orador y la demo. El texto completo de cada diapositiva está en sustentacion/guion_sustentacion.md y en las notas de presentacion/presentacion_notas.pdf.</p>
+
+<h2>14. Glosario</h2>
+<ul>
+<li><b>Adopción final:</b> % de la población que adoptó al terminar el período.</li>
+<li><b>Agrupamiento (C):</b> probabilidad de que dos contactos de una persona se conozcan entre sí.</li>
+<li><b>BehaviorSpace:</b> herramienta de NetLogo que corre combinaciones de parámetros con réplicas y exporta tablas.</li>
+<li><b>Camino medio:</b> número medio de saltos entre dos personas de la red.</li>
+<li><b>Grado promedio (k):</b> número medio de contactos por persona.</li>
+<li><b>IC 95 %:</b> intervalo donde, con 95 % de confianza, está la media verdadera del escenario.</li>
+<li><b>Mínimos cuadrados:</b> método de ajuste que minimiza la suma de los errores al cuadrado.</li>
+<li><b>Sell-in:</b> unidades enviadas a tiendas (lo que reportan Sony y Take-Two), no ventas a personas.</li>
+<li><b>Welch y Holm:</b> prueba t que no supone varianzas iguales, y corrección que controla los falsos positivos al hacer muchas pruebas a la vez.</li>
+</ul>
+
+</body>
+</html>
