@@ -1,8 +1,8 @@
 # Difusión de una innovación en redes sociales — proyecto 14, Simulación Computacional
 
-Modelo basado en agentes (NetLogo) de la adopción de una tecnología en una población conectada por una red social, calibrado con la serie de adopción de smartphones de Pew Research Center. Integrantes: Jesus Gregorio Delgado, David Andres Monroy Aguiar, Duvan Felipe Baquero Cerquera. Entrega: martes 17 de noviembre de 2026, 12:00.
+Modelo basado en agentes (NetLogo) de la adopción de una tecnología en una población conectada por una red social, calibrado con la serie de adopción de smartphones de Pew Research Center. Integrantes: Jesus Gregorio Delgado, David Andres Monroy Aguiar, Duvan Felipe Baquero Cerquera.
 
-## Qué hay en cada carpeta
+## Contenido
 
 | Carpeta | Contenido |
 |---|---|
