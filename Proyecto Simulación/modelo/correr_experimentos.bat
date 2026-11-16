@@ -1,6 +1,7 @@
 @echo off
 rem Corre los cuatro experimentos BehaviorSpace sin abrir la interfaz (Windows).
-rem Uso: correr_experimentos.bat ["C:\Program Files\NetLogo 7.0.4"] [hilos]
+rem Uso: correr_experimentos.bat ["C:\Program Files\NetLogo 7.0.4"] [hilos] ["experimento1 experimento2"]
+rem Sin lista de experimentos corre los cuatro.
 rem Sin ruta, usa la version de NetLogo mas reciente instalada en Program Files.
 rem Llama directamente al Java que trae NetLogo: el netlogo-headless.bat de
 rem NetLogo 7.0.4 falla cuando la ruta de instalacion tiene espacios.
@@ -21,11 +22,13 @@ set "JAVA=%NETLOGO%\runtime\bin\java.exe"
 if not exist "%JAVA%" set "JAVA=java.exe"
 set "HILOS=%~2"
 if "%HILOS%"=="" set "HILOS=2"
+set "EXPS=%~3"
+if "%EXPS%"=="" set "EXPS=calibracion_ps5 publicidad_x_densidad topologia_x_publicidad duracion_campana"
 set "AQUI=%~dp0"
 set "SALIDA=%AQUI%..\datos\resultados"
 if not exist "%SALIDA%" mkdir "%SALIDA%"
 echo NetLogo: %JAR%
-for %%E in (publicidad_x_densidad topologia_x_publicidad duracion_campana calibracion_pew) do (
+for %%E in (%EXPS%) do (
   echo == %%E
   "%JAVA%" -XX:MaxRAMPercentage=50 -Dfile.encoding=UTF-8 "-Dnetlogo.extensions.dir=%NETLOGO%\extensions" "-Dnetlogo.models.dir=%NETLOGO%\models" --add-exports=java.base/java.lang=ALL-UNNAMED --add-exports=java.desktop/sun.awt=ALL-UNNAMED --add-exports=java.desktop/sun.java2d=ALL-UNNAMED -classpath "%JAR%" org.nlogo.headless.Main --model "%AQUI%difusion_innovacion.nlogo" --experiment %%E --table "%SALIDA%\%%E.csv" --threads %HILOS%
   if errorlevel 1 exit /b 1
