@@ -1,137 +1,155 @@
 {
-  "origen_temporal": 2007.46,
+  "lanzamiento": "2020-11-12",
+  "origen_temporal": 2020.863387978142,
+  "universo_millones": 117.0,
   "anual": {
-    "p": 0.07922613851974628,
-    "q": 0.241851428587902,
-    "m": 0.89,
+    "p": 0.09703246253937431,
+    "q": 0.44941487168501626,
+    "m": 1.0,
     "error_estandar": {
-      "p": 0.007623324333039985,
-      "q": 0.031053668308338136
+      "p": 0.01026074763496107,
+      "q": 0.08066808193868896
     }
   },
   "mensual": {
-    "p": 0.0066021782099788566,
-    "q": 0.020154285715658502,
-    "m": 0.89
+    "p": 0.00808603854494786,
+    "q": 0.03745123930708469,
+    "m": 1.0
+  },
+  "m_en_borde_de_rejilla": true,
+  "ajuste_libre_entrenamiento": {
+    "p": 0.03453977132733307,
+    "q": 0.2595170877675511,
+    "m": 2.9999999999999787
+  },
+  "ajuste_libre_toda_la_serie": {
+    "p": 0.08852668373767035,
+    "q": 0.45334732812152206,
+    "m": 1.071934560163767
   },
   "seleccion_m": [
     {
       "m": 0.8,
-      "RMSE_validacion": 4.5424186448814865
+      "RMSE_validacion": 3.670168623376713
     },
     {
       "m": 0.81,
-      "RMSE_validacion": 3.9485739485931406
+      "RMSE_validacion": 3.5567906316042706
     },
     {
       "m": 0.82,
-      "RMSE_validacion": 3.381770257835174
+      "RMSE_validacion": 3.448280428846496
     },
     {
       "m": 0.83,
-      "RMSE_validacion": 2.8422315622494323
+      "RMSE_validacion": 3.34443192639329
     },
     {
       "m": 0.84,
-      "RMSE_validacion": 2.330834909135225
+      "RMSE_validacion": 3.245052007712338
     },
     {
       "m": 0.85,
-      "RMSE_validacion": 1.8499507200869922
+      "RMSE_validacion": 3.1499589788775237
     },
     {
       "m": 0.86,
-      "RMSE_validacion": 1.4056183984248882
+      "RMSE_validacion": 3.058982774373074
     },
     {
       "m": 0.87,
-      "RMSE_validacion": 1.0140483517445364
+      "RMSE_validacion": 2.9719631027254634
     },
     {
       "m": 0.88,
-      "RMSE_validacion": 0.7218235157817364
+      "RMSE_validacion": 2.8887491261255285
     },
     {
       "m": 0.89,
-      "RMSE_validacion": 0.6329910439961723
+      "RMSE_validacion": 2.809199234921072
     },
     {
       "m": 0.9,
-      "RMSE_validacion": 0.7868618804230159
+      "RMSE_validacion": 2.7331793027697464
     },
     {
       "m": 0.91,
-      "RMSE_validacion": 1.06450481527388
+      "RMSE_validacion": 2.660563243689831
     },
     {
       "m": 0.92,
-      "RMSE_validacion": 1.3798076167764095
+      "RMSE_validacion": 2.591231523715821
     },
     {
       "m": 0.93,
-      "RMSE_validacion": 1.7018869135440287
+      "RMSE_validacion": 2.5250710179511877
     },
     {
       "m": 0.94,
-      "RMSE_validacion": 2.019818820660068
+      "RMSE_validacion": 2.4619747401267404
     },
     {
       "m": 0.95,
-      "RMSE_validacion": 2.3293348018234017
+      "RMSE_validacion": 2.401840533238376
     },
     {
       "m": 0.96,
-      "RMSE_validacion": 2.6286923117100156
+      "RMSE_validacion": 2.344571534928724
     },
     {
       "m": 0.97,
-      "RMSE_validacion": 2.9172369342280033
+      "RMSE_validacion": 2.2900751888426614
     },
     {
       "m": 0.98,
-      "RMSE_validacion": 3.194830319151293
+      "RMSE_validacion": 2.2382629011983437
     },
     {
       "m": 0.99,
-      "RMSE_validacion": 3.4615954090778414
+      "RMSE_validacion": 2.189049502917258
     },
     {
       "m": 1.0,
-      "RMSE_validacion": 3.7177922466048514
+      "RMSE_validacion": 2.1423533887286172
     }
   ],
-  "tiempo_pico_anios": 3.4758495899766313,
+  "tiempo_pico_anios": 2.805212447090897,
   "particion": {
     "entrenamiento": {
-      "inicio": 2011.0,
-      "fin": 2017.0
+      "inicio": "2020-12-31",
+      "fin": "2023-12-31"
     },
     "validacion": {
-      "inicio": 2018.0,
-      "fin": 2022.0
+      "inicio": "2024-03-31",
+      "fin": "2024-12-31"
     },
     "prueba": {
-      "inicio": 2023.0,
-      "fin": 2027.0
+      "inicio": "2025-03-31",
+      "fin": "2026-09-30"
     }
   },
   "n_observaciones": {
-    "entrenamiento": 26,
-    "validacion": 3,
-    "prueba": 4
+    "entrenamiento": 13,
+    "validacion": 4,
+    "prueba": 7
   },
   "desempeno_bass": {
     "entrenamiento": {
-      "RMSE_pct": 2.28603086845138,
-      "MAPE_pct": 3.6411465305646895
+      "RMSE_pct": 1.7458329966303399,
+      "MAPE_pct": 14.456635565008726
     },
     "validacion": {
-      "RMSE_pct": 0.6329910439961723,
-      "MAPE_pct": 0.5970714837252242
+      "RMSE_pct": 2.1423533887286172,
+      "MAPE_pct": 2.7397646662262654
     },
     "prueba": {
-      "RMSE_pct": 3.098791012970014,
-      "MAPE_pct": 3.401192628010579
+      "RMSE_pct": 3.2243549203496684,
+      "MAPE_pct": 3.8519421617874237
     }
+  },
+  "control": {
+    "fecha": "2026-11-10",
+    "real_minimo_pct": 85.47008547008546,
+    "bass_pct": 81.87644307776122
   }
 }

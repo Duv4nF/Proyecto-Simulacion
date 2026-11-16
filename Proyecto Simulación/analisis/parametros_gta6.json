@@ -1,0 +1,61 @@
+{
+  "analogo": "Grand Theft Auto V (PS3 y Xbox 360), lanzado el 17-sep-2013",
+  "base_instalada_M": {
+    "PS3": 80.0,
+    "Xbox 360": 80.0
+  },
+  "observaciones": [
+    {
+      "fecha": "2013-09-17",
+      "tipo": "primeras 24 horas",
+      "t_meses": 0.0,
+      "unidades_M": 11.21,
+      "fraccion_base": 0.0701
+    },
+    {
+      "fecha": "2013-10-29",
+      "tipo": "sell-in",
+      "t_meses": 1.38,
+      "unidades_M": 29.0,
+      "fraccion_base": 0.1812
+    },
+    {
+      "fecha": "2014-02-03",
+      "tipo": "sell-in",
+      "t_meses": 4.57,
+      "unidades_M": 32.5,
+      "fraccion_base": 0.2031
+    },
+    {
+      "fecha": "2014-05-13",
+      "tipo": "sell-in",
+      "t_meses": 7.82,
+      "unidades_M": 33.0,
+      "fraccion_base": 0.2062
+    },
+    {
+      "fecha": "2014-08-05",
+      "tipo": "sell-in",
+      "t_meses": 10.58,
+      "unidades_M": 34.0,
+      "fraccion_base": 0.2125
+    }
+  ],
+  "ajuste": {
+    "F0": 0.0700625,
+    "p_mes": 0.6916884762705876,
+    "q_mes": 0.0375,
+    "m": 0.2125,
+    "rmse_pp": 0.5347944261153824
+  },
+  "gta6": {
+    "potencial_mercado_pct": 21,
+    "adoptantes_iniciales_pct": 7,
+    "p_mes": 0.69,
+    "q_mes": [
+      0.0375,
+      0.075
+    ],
+    "horizonte_meses": 24
+  }
+}
