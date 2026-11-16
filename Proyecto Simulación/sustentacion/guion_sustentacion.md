@@ -31,7 +31,7 @@ La rúbrica pide participación equitativa, dominio del tiempo y demostración d
 
 **Diapositiva 7 · Esquema del sistema (0:40).** Arriba el flujo: los datos reales calibran Bass, que nos da *p*, *q* y *m*; NetLogo simula; BehaviorSpace corre los cuatro experimentos; Python calcula las medidas y las figuras. Abajo, lo que pasa dentro del modelo cada mes.
 
-**Diapositiva 8 · Implementación (0:40).** NetLogo 6.4 con la extensión `nw`. *Configurar* crea la red y siembra los innovadores; *simular* ejecuta un mes en dos fases (decidir y actualizar) para que el orden de los agentes no afecte el resultado; BehaviorSpace corre los experimentos con 30 réplicas y exporta las tablas. Los colores de la figura son los de la interfaz.
+**Diapositiva 8 · Implementación (0:40).** NetLogo con la extensión `nw` (el archivo es de la versión 6.4; los experimentos se corrieron en la 7.0.4). *Configurar* crea la red y siembra los innovadores; *simular* ejecuta un mes en dos fases (decidir y actualizar) para que el orden de los agentes no afecte el resultado; BehaviorSpace corre los experimentos con 30 réplicas y exporta las tablas. Los colores de la figura son los de la interfaz.
 
 **Diapositiva 9 · Conjunto de datos (0:40).** La serie real es de Pew Research Center: 33 encuestas entre 2011 y 2026. La dividimos cronológicamente: entrenamiento hasta 2016, validación 2018–2021 y prueba de 2023 en adelante. El segundo conjunto lo genera la simulación: 1710 corridas, más de 230 mil filas.
 
@@ -43,11 +43,11 @@ La rúbrica pide participación equitativa, dominio del tiempo y demostración d
 
 **Diapositiva 12 · Calibración (0:50).** El ajuste en entrenamiento da *p* = 0,079 y *q* = 0,242 anuales; validación elige un potencial de mercado del 89 % y, entre nueve estructuras de red, la libre de escala con *k* = 16. En prueba, que nunca tocamos, el error es de ~4 puntos porcentuales, comparable al del modelo agregado. Con los mismos coeficientes, toda red difunde más lento que la mezcla perfecta, porque la influencia se desperdicia entre vecinos que ya adoptaron. *(Las cifras exactas están en la diapositiva; léanlas de ahí.)*
 
-**Diapositiva 13 · Publicidad (0:50).** El resultado central: sin publicidad, con los coeficientes calibrados, en diez años se llega apenas a entre 8 % y 17 %; con campaña permanente, a entre 80 % y 86 %. Con la imitación de la literatura el patrón es el mismo con niveles más altos. La publicidad no es un acelerador: es la condición del despegue.
+**Diapositiva 13 · Publicidad (0:50).** El resultado central: sin publicidad, con los coeficientes calibrados, en diez años se llega apenas a entre 8 % y 17 %; con campaña permanente, a entre 80 % y 85 %. Con la imitación de la literatura el patrón es el mismo con niveles más altos. La publicidad no es un acelerador: es la condición del despegue.
 
-**Diapositiva 14 · Densidad y topología (0:50).** Sin publicidad, pasar de *k* = 2 a *k* = 16 multiplica la adopción por dos o por tres; con campaña solo añade unos 7 puntos. En topología pasa lo mismo: sin campaña, mundo pequeño es la más lenta (el agrupamiento atrapa la influencia) y libre de escala la más variable (depende de si un hub adopta temprano); con campaña, las tres convergen.
+**Diapositiva 14 · Densidad y topología (0:50).** Sin publicidad, pasar de *k* = 2 a *k* = 16 multiplica la adopción por dos o por tres; con campaña solo añade unos 6 puntos. En topología pasa lo mismo: sin campaña, mundo pequeño es la más lenta (el agrupamiento atrapa la influencia) y libre de escala la más variable (depende de si un hub adopta temprano); con campaña, las tres convergen.
 
-**Diapositiva 15 · Duración (0:40).** Rendimiento fuertemente decreciente: seis meses de publicidad suben la adopción final de 13 % a 29 %; dos años la llevan a 56 %; permanente, 84 %. Con imitación de la literatura, dos años bastan para 75 %. La publicidad vale más al comienzo.
+**Diapositiva 15 · Duración (0:40).** Rendimiento fuertemente decreciente: seis meses de publicidad suben la adopción final de 13 % a 28 %; dos años la llevan a 55 %; permanente, 84 %. Con imitación de la literatura, dos años bastan para 74 %. La publicidad vale más al comienzo.
 
 ## Bloque 4 · David · Demostración (11:40 – 13:30)
 
@@ -63,7 +63,7 @@ Si el tiempo aprieta, hacer solo 1–3. Si preguntan por el código, mostrar `de
 
 ## Bloque 5 · Duvan (13:30 – 15:00)
 
-**Diapositiva 17 · Conclusiones (1:00).** Tres conclusiones: la publicidad es la condición del despegue; su efecto se concentra en los primeros meses, así que una campaña corta e intensa rinde casi tanto como una permanente; y la estructura de la red solo cambia el resultado cuando la difusión es orgánica. El modelo quedó validado contra datos que no usamos para calibrar. Limitaciones: coeficientes homogéneos, red estática; el siguiente paso sería calibrar con datos colombianos.
+**Diapositiva 17 · Conclusiones (1:00).** Tres conclusiones: la publicidad es la condición del despegue; su efecto se concentra en los primeros meses: dos años de campaña logran el 58 % del efecto de una permanente (el 73 % con imitación fuerte); y la estructura de la red solo cambia el resultado cuando la difusión es orgánica. El modelo quedó validado contra datos que no usamos para calibrar. Limitaciones: coeficientes homogéneos, red estática; el siguiente paso sería calibrar con datos colombianos.
 
 **Diapositiva 18 · Referencias (0:30).** Bass y Rogers para la teoría; Goldenberg y Rand para la versión en red y las buenas prácticas de ABM; Watts y Strogatz para mundo pequeño; Sultan para los coeficientes típicos; NetLogo y Pew. Gracias; quedamos atentos a sus preguntas.
 
@@ -75,6 +75,6 @@ Si el tiempo aprieta, hacer solo 1–3. Si preguntan por el código, mostrar `de
 - **¿Por qué dos valores de q?** Con datos agregados, la separación entre influencia externa e interna depende del origen temporal: distintos orígenes ajustan la curva casi igual con *q* entre 0,06 y 0,33 anual. Por eso evaluamos los escenarios con el valor calibrado y con el promedio de la literatura (Sultan et al., 1990).
 - **¿Por qué la curva del ABM va por debajo de la de Bass con los mismos parámetros?** En una red los adoptantes se agrupan: parte de la influencia social de cada adoptante recae en vecinos que ya adoptaron y se desperdicia. En la mezcla perfecta no hay ese desperdicio. Por eso las redes densas y las libres de escala se acercan más a Bass.
 - **¿Qué es la actualización sincrónica y por qué importa?** Todos los agentes deciden con el estado del inicio del mes y los cambios se aplican a la vez. Si se actualizara uno por uno, el orden en que NetLogo recorre los agentes cambiaría el resultado.
-- **¿Cómo verificaron el modelo?** Con una implementación independiente en Python + networkx de la misma regla; las medias de adopción final de ambas implementaciones coinciden dentro de los intervalos de confianza. Además, con la red completa el ABM recupera la curva de Bass, que es la verificación analítica.
-- **¿Por qué 30 réplicas?** Es el tamaño a partir del cual el IC del 95 % de la media con la *t* de Student es estable para estas varianzas; los intervalos resultantes son de ±0,3 a ±2 puntos porcentuales, mucho menores que las diferencias entre escenarios.
+- **¿Cómo verificaron el modelo?** Con una implementación independiente en Python + networkx de la misma regla; repetimos los cuatro experimentos y, en los 57 escenarios, la adopción final media difiere en 0,5 puntos en promedio (2,7 como máximo); ninguna diferencia es significativa al corregir por comparaciones múltiples (Welch + Holm). Además, con la red completa el ABM recupera la curva de Bass, que es la verificación analítica.
+- **¿Por qué 30 réplicas?** Es el tamaño a partir del cual el IC del 95 % de la media con la *t* de Student es estable para estas varianzas; los intervalos resultantes son de ±0,3 a ±3 puntos porcentuales, mucho menores que las diferencias entre escenarios.
 - **¿Qué pasaría con una red dinámica o con abandono?** No está en el modelo; son las extensiones que proponemos. Con abandono, la curva de Bass tendría un término de salida y el nivel final sería menor que *m*.

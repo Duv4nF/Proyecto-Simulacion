@@ -9,7 +9,7 @@ Modelo basado en agentes (NetLogo) de la adopción de una tecnología en una pob
 | `modelo/` | `difusion_innovacion.nlogo` (el modelo completo: código, interfaz, pestaña Info y los 4 experimentos BehaviorSpace) y los scripts `correr_experimentos.sh/.bat` para ejecutarlos sin abrir la interfaz. |
 | `datos/` | `pew_smartphone_eeuu.csv` (serie real, 33 observaciones 2011–2026). `resultados/` recibe las tablas de NetLogo; `resultados_python/` tiene las de la réplica en Python. |
 | `analisis/` | `calibracion_bass.py` (ajuste de p, q, m con partición), `analisis_resultados.py` (medidas, figuras y tablas del artículo), `figuras_diapositivas.py` (figuras de la presentación), `verificacion_python.py` y `generar_resultados_python.py` (réplica independiente del modelo). Salidas: `parametros_calibrados.json`, `resumen_resultados.json`, `figuras/`. |
-| `articulo/` | `main.tex` + `referencias.bib` + `figuras/` + `tablas/` (formato LNCS). `vista_previa_main.pdf` es una compilación local aproximada; la definitiva se compila en Overleaf con la plantilla LNCS (ver abajo). |
+| `articulo/` | `main.tex` + `referencias.bib` + `figuras/` + `tablas/` (formato LNCS). `vista_previa_main.pdf` es una compilación local con la clase oficial `llncs` (pdfLaTeX); la de la entrega se compila en Overleaf con la plantilla LNCS (ver abajo). |
 | `presentacion/` | `presentacion.pptx` (18 diapositivas, con el guion en las notas del orador) y el script que la genera. |
 | `sustentacion/` | `guion_sustentacion.md`: reparto de tiempos, texto por diapositiva, pasos de la demo y preguntas probables. |
 
@@ -19,21 +19,21 @@ Modelo basado en agentes (NetLogo) de la adopción de una tecnología en una pob
 2. Abrir `modelo/difusion_innovacion.nlogo`, pulsar **configurar** y **simular**. La pestaña **Info** explica cada control y qué observar.
 3. Experimentos: **Herramientas → BehaviorSpace** muestra los cuatro diseños (`publicidad_x_densidad`, `topologia_x_publicidad`, `duracion_campana`, `calibracion_pew`). Para correrlos todos sin interfaz:
    - Linux/Mac: `NETLOGO=/ruta/NetLogo-6.4.0 bash modelo/correr_experimentos.sh 4`
-   - Windows: `modelo\correr_experimentos.bat "C:\Program Files\NetLogo 6.4.0" 4`
+   - Windows: `modelo\correr_experimentos.bat "C:\Program Files\NetLogo 7.0.4" 10` (sin ruta usa la versión más reciente instalada en Program Files; el último número es la cantidad de hilos). El script llama directamente al Java que trae NetLogo porque el `netlogo-headless.bat` de NetLogo 7.0.4 falla cuando la ruta de instalación tiene espacios.
    Las tablas quedan en `datos/resultados/` (toman entre 30 y 90 minutos según el equipo).
 
 ## Cómo regenerar figuras, tablas, artículo y presentación
 
-Requiere Python 3 con `numpy pandas scipy matplotlib networkx` y, para la presentación, Node con `pptxgenjs`.
+Requiere Python 3 con `numpy pandas scipy matplotlib networkx` y, para la presentación, Node con `pptxgenjs react react-dom react-icons sharp`. Las figuras usan la fuente Inter, que viene en `analisis/fuentes/` (licencia SIL OFL) para que salgan iguales en cualquier equipo.
 
 ```bash
 python3 analisis/calibracion_bass.py              # p, q, m  → analisis/parametros_calibrados.json
 python3 analisis/analisis_resultados.py           # lee datos/resultados/  → figuras, tablas y cifras del artículo
 python3 analisis/figuras_diapositivas.py          # figuras de la presentación
-PPTX_SKILL=<ruta al apply_theme.js> node presentacion/construir_presentacion.js
+PPTX_SKILL=<carpeta que contiene scripts/apply_theme.js> node presentacion/construir_presentacion.js
 ```
 
-`analisis_resultados.py resultados_python` hace lo mismo con las tablas de la réplica en Python. Las cifras citadas en el artículo y en las diapositivas se leen de `articulo/tablas/cifras.tex`, así que al cambiar los resultados se actualizan solas.
+`analisis_resultados.py resultados_python` hace lo mismo con las tablas de la réplica en Python. Si existen las dos carpetas (`datos/resultados/` y `datos/resultados_python/`), el análisis también compara ambas implementaciones escenario por escenario (prueba *t* de Welch con corrección de Holm) y deja el resultado en las cifras de verificación del artículo. Después de regenerar, copiar `analisis/figuras/fig_calibracion.pdf` y `fig_escenarios.pdf` a `articulo/figuras/`. Las cifras citadas en el artículo y en las diapositivas se leen de `articulo/tablas/cifras.tex`, así que al cambiar los resultados se actualizan solas.
 
 ## Cómo compilar el artículo en Overleaf
 

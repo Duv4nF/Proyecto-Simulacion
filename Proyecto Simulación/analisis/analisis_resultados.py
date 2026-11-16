@@ -42,6 +42,9 @@ COLOR_TOPO = {"aleatoria": NARANJA, "mundo pequeño": TEAL, "libre de escala": V
 ORDEN_TOPO = ["aleatoria", "mundo pequeño", "libre de escala"]
 NOMBRE_Q = {0.02: "imitación calibrada (q = 0,020)", 0.032: "imitación de la literatura (q = 0,032)"}
 
+# Inter (SIL OFL) viene en analisis/fuentes para que las figuras salgan iguales en cualquier equipo
+for ttf in (RAIZ / "analisis" / "fuentes").glob("*.ttf"):
+    font_manager.fontManager.addfont(str(ttf))
 if any("Inter" == f.name for f in font_manager.fontManager.ttflist):
     plt.rcParams["font.family"] = "Inter"
 plt.rcParams.update({
@@ -68,9 +71,9 @@ def guardar(fig, nombre):
 
 
 # ----------------------------------------------------------------- lectura
-def leer(nombre):
+def leer(nombre, carpeta=None):
     """Tabla BehaviorSpace: seis líneas de encabezado y luego la tabla."""
-    df = pd.read_csv(RES / f"{nombre}.csv", skiprows=6, low_memory=False)
+    df = pd.read_csv((carpeta or RES) / f"{nombre}.csv", skiprows=6, low_memory=False)
     df = df.rename(columns={"[run number]": "corrida", "[step]": "mes"})
     for col in ("campaña?", "dibujar-red?"):
         if col in df and df[col].dtype == object:
@@ -114,6 +117,35 @@ def curva_media(df, factores):
     return out
 
 
+def comparar_implementaciones(alfa=0.05):
+    """Verificación: adopción final de cada escenario en NetLogo (datos/resultados) frente a la réplica
+    independiente en Python (datos/resultados_python), con la prueba t de Welch y la corrección de Holm
+    para comparaciones múltiples. Devuelve None si falta alguna de las dos carpetas de resultados."""
+    experimentos = {
+        "publicidad_x_densidad": ["q-imitacion", "campaña?", "grado-promedio"],
+        "topologia_x_publicidad": ["q-imitacion", "campaña?", "tipo-red"],
+        "duracion_campana": ["q-imitacion", "duracion-campaña"],
+        "calibracion_pew": ["tipo-red", "grado-promedio"],
+    }
+    carpetas = [RAIZ / "datos" / c for c in ("resultados", "resultados_python")]
+    if not all((c / f"{n}.csv").exists() for c in carpetas for n in experimentos):
+        return None
+    difs, pvals = [], []
+    for nombre, factores in experimentos.items():
+        nl, py = (leer(nombre, c) for c in carpetas)
+        nl, py = (d.loc[d.groupby("corrida")["mes"].idxmax()] for d in (nl, py))
+        grupos_py = dict(tuple(py.groupby(factores)))
+        for clave, a in nl.groupby(factores):
+            a, b = a["porcentaje-adopcion"], grupos_py[clave]["porcentaje-adopcion"]
+            difs.append(a.mean() - b.mean())
+            pvals.append(stats.ttest_ind(a, b, equal_var=False).pvalue)
+    difs, pvals = np.abs(np.array(difs)), np.array(pvals)
+    n = len(pvals)
+    holm = np.minimum(1, np.maximum.accumulate(np.sort(pvals) * (n - np.arange(n))))
+    return {"escenarios": n, "dif_media": float(difs.mean()), "dif_max": float(difs.max()),
+            "significativas": int((pvals < alfa).sum()), "significativas_holm": int((holm < alfa).sum())}
+
+
 # ----------------------------------------------------------------- figuras
 def fig_curvas(df):
     """Curvas de adopción: dos paneles (nivel de q), campaña × densidad (k = 4 y 12)."""
@@ -151,15 +183,16 @@ def fig_escenarios(df, res_dur):
                 c = cur[(cur["q-imitacion"] == q) & (cur["campaña?"] == camp) & (cur["grado-promedio"] == k)]
                 eje.fill_between(c["mes"], c["media"] - c["ic"], c["media"] + c["ic"], color=COLOR_CAMPANA[camp], alpha=0.18, lw=0)
                 eje.plot(c["mes"], c["media"], ls=estilo, color=COLOR_CAMPANA[camp], lw=1.5, label=f"{NOMBRE_CAMPANA[camp]}, k = {k}")
-                if not camp:
-                    eje.annotate(f"k = {k}", (c["mes"].iloc[-1], c["media"].iloc[-1]), xytext=(2, 0),
+                if not camp:  # etiquetas separadas un poco para que no se monten cuando las curvas terminan cerca
+                    eje.annotate(f"k = {k}", (c["mes"].iloc[-1], c["media"].iloc[-1]), xytext=(2, 2.5 if k == 12 else -2.5),
                                  textcoords="offset points", fontsize=6.5, color=COLOR_CAMPANA[camp], va="center")
         eje.set_title(("(a) " if q == 0.02 else "(b) ") + NOMBRE_Q[q].replace(" (", "\n("), loc="left", color=SECUNDARIO, fontsize=8)
         eje.set_xlabel("mes")
         eje.set_xlim(0, 134)
         eje.set_ylim(0, 100)
     ejes[0].set_ylabel("adopción (% de la población)")
-    ejes[0].legend(loc="upper left", handlelength=2.0, fontsize=6.8, labelspacing=0.3)
+    ejes[0].legend(loc="upper left", handlelength=2.0, fontsize=6.8, labelspacing=0.3,
+                   frameon=True, facecolor="white", edgecolor="none", framealpha=0.9)  # la curva con campaña pasa por debajo
     ejes[1].tick_params(labelleft=False)
     eje = ejes[2]
     estilos = {0.02: (TEAL, "o", "-"), 0.032: (VIOLETA, "s", (0, (4, 2)))}
@@ -170,7 +203,8 @@ def fig_escenarios(df, res_dur):
                      capsize=2, label=f"q = {coma(q, 3)}")
     eje.set_title("(c) duración de la campaña\n(mundo pequeño, k = 6)", loc="left", color=SECUNDARIO, fontsize=8)
     eje.set_xlabel("meses de campaña")
-    eje.set_xticks([0, 12, 24, 60, 120])
+    eje.set_xticks([0, 24, 60, 120])
+    eje.set_xticks([6, 12], minor=True)  # sin etiqueta: no caben junto a 0 y 24
     eje.set_ylim(0, 100)
     eje.tick_params(labelleft=False)
     eje.legend(loc="lower right", fontsize=6.8)
@@ -233,7 +267,8 @@ def fig_duracion(res):
                      ls=estilo, lw=1.6, capsize=2.5, label=f"q = {coma(q, 3)}")
     eje.set_xlabel("duración de la campaña (meses)")
     eje.set_ylabel("adopción final a 120 meses (%)")
-    eje.set_xticks([0, 6, 12, 24, 60, 120])
+    eje.set_xticks([0, 12, 24, 60, 120])
+    eje.set_xticks([6], minor=True)  # sin etiqueta: no cabe entre 0 y 12
     eje.set_ylim(0, 100)
     eje.legend(loc="lower right")
     guardar(fig, "fig_duracion")
@@ -291,7 +326,7 @@ NIVEL_Q = {0.02: "Cal", 0.032: "Lit"}
 TOPO_MACRO = {"aleatoria": "Aleatoria", "mundo pequeño": "Mundo", "libre de escala": "Escala"}
 
 
-def escribir_cifras(parametros, r1, r2, r3, errores, seleccion, est):
+def escribir_cifras(parametros, r1, r2, r3, errores, seleccion, est, verif=None):
     """Macros LaTeX con las cifras citadas en el texto del artículo (articulo/tablas/cifras.tex)."""
     m = {}
     an, me = parametros["anual"], parametros["mensual"]
@@ -328,6 +363,27 @@ def escribir_cifras(parametros, r1, r2, r3, errores, seleccion, est):
     for topo, fila in est.iterrows():
         m[f"Est{TOPO_MACRO[topo]}C"] = coma(fila["agrupamiento"], 3)
         m[f"Est{TOPO_MACRO[topo]}L"] = coma(fila["camino-medio"], 1) if not np.isnan(fila["camino-medio"]) else "no conexa"
+    # rangos (mínimo y máximo entre densidades o topologías) para el texto
+    for prefijo, res in (("", r1), ("Topo", r2)):
+        for (camp, q), g in res.groupby(["campaña?", "q-imitacion"]):
+            clave = f"{prefijo}{'Con' if camp else 'Sin'}{NIVEL_Q[round(q, 3)]}"
+            m[clave + "Min"], m[clave + "Max"] = coma(g["media"].min()), coma(g["media"].max())
+    # fracción del efecto de una campaña permanente que logra una de dos años
+    dur = r3.set_index(["q-imitacion", "duracion-campaña"])["media"]
+    for q, nivel in NIVEL_Q.items():
+        m[f"Dur{nivel}FraccionVeinticuatro"] = coma(100 * (dur[(q, 24)] - dur[(q, 0)]) / (dur[(q, 120)] - dur[(q, 0)]), 0)
+    m["DurCalGananciaSeis"] = coma(dur[(0.02, 6)] - dur[(0.02, 0)], 0)
+    # verificación frente a la réplica en Python
+    if verif:
+        h = verif["significativas_holm"]
+        m["VerifEscenarios"] = str(verif["escenarios"])
+        m["VerifDifMedia"], m["VerifDifMax"] = coma(verif["dif_media"]), coma(verif["dif_max"])
+        m["VerifSignif"] = str(verif["significativas"])
+        m["VerifHolm"] = ("ninguna diferencia es significativa" if h == 0 else
+                          "una diferencia es significativa" if h == 1 else f"{h} diferencias son significativas")
+    else:
+        for k in ("VerifEscenarios", "VerifDifMedia", "VerifDifMax", "VerifSignif", "VerifHolm"):
+            m[k] = "--"
     lineas = [f"\\newcommand{{\\cifra{k}}}{{{v}}}" for k, v in m.items()]
     (TAB / "cifras.tex").write_text("% generado por analisis_resultados.py\n" + "\n".join(lineas) + "\n", encoding="utf-8")
 
@@ -439,9 +495,14 @@ def main():
                 "tab:calibracion", "lrrr", pequena=True)
     cifras["calibracion"] = {"errores": errores.to_dict(orient="records"), "seleccion": seleccion, "bass": bass}
 
+    # ---- verificación: NetLogo frente a la réplica en Python
+    verif = comparar_implementaciones()
+    cifras["verificacion"] = verif
+
     (RAIZ / "analisis" / "resumen_resultados.json").write_text(json.dumps(cifras, indent=2, ensure_ascii=False, default=float), encoding="utf-8")
-    escribir_cifras(parametros, r1, r2, r3, errores, seleccion, est)
+    escribir_cifras(parametros, r1, r2, r3, errores, seleccion, est, verif)
     print("selección por validación:", seleccion)
+    print("verificación NetLogo frente a Python:", verif)
     print(r1.round(1).to_string())
     print(r2.round(1).to_string())
     print(r3.round(1).to_string())

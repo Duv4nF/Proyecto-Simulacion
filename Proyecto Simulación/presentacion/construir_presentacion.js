@@ -231,7 +231,7 @@ const PCT = (k) => c(k) + " %";
 
   // ================================================================ 8. Implementación
   s = pres.addSlide({ masterName: "CONTENIDO", sectionTitle: "Metodología" });
-  s.addText("Implementación en NetLogo 6.4 con la extensión nw", { placeholder: "title" });
+  s.addText("Implementación en NetLogo con la extensión nw", { placeholder: "title" });
   s.addImage({ path: path.join(FIG, "redes.png"), x: 0.5, y: 1.15, w: 9.0, h: 3.15, sizing: { type: "contain", w: 9.0, h: 3.15 }, objectName: "tres tipos de red generados por el modelo" });
   const impl = [
     ["configurar", "genera la red (aleatoria, mundo pequeño o libre de escala) con grado promedio k, marca el potencial de mercado y siembra los innovadores"],
@@ -242,7 +242,7 @@ const PCT = (k) => c(k) + " %";
     const x = 0.5 + i * 3.1;
     texto(s, [{ text: impl[i][0], options: { bold: true, color: C.accent1, breakLine: true } }, { text: impl[i][1], options: { color: C.text2 } }], { x, y: 4.38, w: 2.9, h: 0.8, fontSize: 10.5, color: C.text1, valign: "top", objectName: "implementación " + impl[i][0] });
   }
-  notas(s, "David · 5:50–6:30", "Lo implementamos en NetLogo 6.4 con la extensión nw, que genera las tres familias de redes y mide agrupamiento y longitud de camino. Configurar crea la red y siembra los innovadores; simular ejecuta un mes en dos fases para que el orden de los agentes no afecte el resultado; y BehaviorSpace corre los cuatro experimentos con treinta réplicas y exporta las tablas. Los colores que ven aquí son los de la interfaz: gris no adoptante, turquesa adoptante, naranja adoptó este mes.");
+  notas(s, "David · 5:50–6:30", "Lo implementamos en NetLogo con la extensión nw (el archivo es de la versión 6.4 y los experimentos los corrimos en la 7.0.4), que genera las tres familias de redes y mide agrupamiento y longitud de camino. Configurar crea la red y siembra los innovadores; simular ejecuta un mes en dos fases para que el orden de los agentes no afecte el resultado; y BehaviorSpace corre los cuatro experimentos con treinta réplicas y exporta las tablas. Los colores que ven aquí son los de la interfaz: gris no adoptante, turquesa adoptante, naranja adoptó este mes.");
 
   // ================================================================ 9. Conjunto de datos
   s = pres.addSlide({ masterName: "CONTENIDO", sectionTitle: "Metodología" });
@@ -324,7 +324,7 @@ const PCT = (k) => c(k) + " %";
   cifraGrande(s, PCT("ConCalKDieciseis"), "con campaña permanente en la misma red", 7.0, 2.55, 2.6, { color: C.accent1, tam: 36, tamEtiqueta: 11 });
   texto(s, "Sin campaña, ninguna configuración alcanza el 50 % en diez años; con campaña se alcanza hacia el mes " + c("TcincuentaConCalKSeis") + " (q calibrado) o " + c("TcincuentaConLitKSeis") + " (q de la literatura).", { x: 0.5, y: 4.45, w: 6.2, h: 0.6, fontSize: 11.5, color: C.text1, valign: "top", objectName: "lectura publicidad" });
   texto(s, "La publicidad no acelera la difusión: la hace posible.", { x: 7.0, y: 4.0, w: 2.6, h: 0.9, fontSize: 13, bold: true, italic: true, color: C.text1, valign: "top", fontFace: THEME.headFontFace, objectName: "mensaje publicidad" });
-  notas(s, "Duvan · 9:20–10:10", "Este es el resultado central. Sin publicidad, con los coeficientes calibrados, la difusión depende solo de los innovadores iniciales y en diez años llega apenas al " + c("SinCalKDos") + " – " + c("SinCalKDieciseis") + " %. Con una campaña permanente la curva toma la forma de S y llega al " + c("ConCalKDos") + " – " + c("ConCalKDieciseis") + " %. Con la imitación más fuerte de la literatura, a la derecha, el patrón es el mismo con niveles más altos. La publicidad no es un acelerador: es la condición para que la innovación despegue.");
+  notas(s, "Duvan · 9:20–10:10", "Este es el resultado central. Sin publicidad, con los coeficientes calibrados, la difusión depende solo de los innovadores iniciales y en diez años llega apenas al " + c("SinCalMin") + " – " + c("SinCalMax") + " %. Con una campaña permanente la curva toma la forma de S y llega al " + c("ConCalMin") + " – " + c("ConCalMax") + " %. Con la imitación más fuerte de la literatura, a la derecha, el patrón es el mismo con niveles más altos. La publicidad no es un acelerador: es la condición para que la innovación despegue.");
 
   // ================================================================ 14. Densidad y topología
   s = pres.addSlide({ masterName: "CONTENIDO", sectionTitle: "Resultados" });
@@ -345,7 +345,7 @@ const PCT = (k) => c(k) + " %";
 
   // ================================================================ 15. Duración de la campaña
   s = pres.addSlide({ masterName: "CONTENIDO", sectionTitle: "Resultados" });
-  s.addText("Una campaña corta al inicio captura casi todo el efecto", { placeholder: "title" });
+  s.addText("Dos años de campaña logran el " + c("DurCalFraccionVeinticuatro") + " % del efecto", { placeholder: "title" });
   s.addImage({ path: path.join(FIG, "fig_duracion.png"), x: 0.5, y: 1.2, w: 4.6, h: 3.1, sizing: { type: "contain", w: 4.6, h: 3.1 }, objectName: "adopción final según duración de la campaña" });
   texto(s, "Adopción final a 120 meses según los meses de campaña, para los dos niveles de q (media e IC 95 %).", { x: 0.5, y: 4.45, w: 4.6, h: 0.5, fontSize: 10.5, italic: true, color: C.text2, objectName: "leyenda duración" });
   const dur = [["0", c("DurCalDCero")], ["6", c("DurCalDSeis")], ["24", c("DurCalDVeinticuatro")], ["60", c("DurCalDSesenta")], ["120", c("DurCalDCientoveinte")]];
@@ -355,10 +355,10 @@ const PCT = (k) => c(k) + " %";
     const y = 1.6 + i * 0.52;
     nodo(s, dur[i][0], 5.6, y, 0.5, i === 0 ? C.accent2 : C.accent1);
     texto(s, dur[i][1] + " %", { x: 6.3, y, w: 1.3, h: 0.5, fontSize: 18, bold: true, color: C.text1, valign: "middle", fontFace: THEME.headFontFace, objectName: "adopción duración " + dur[i][0] });
-    const nota = ["sin publicidad", "+" + (parseFloat(c("DurCalDSeis").replace(",", ".")) - parseFloat(c("DurCalDCero").replace(",", "."))).toFixed(0).replace(".", ",") + " puntos en seis meses", "dos años", "cinco años", "campaña permanente"][i];
+    const nota = ["sin publicidad", "+" + c("DurCalGananciaSeis") + " puntos en seis meses", "dos años", "cinco años", "campaña permanente"][i];
     texto(s, nota, { x: 7.65, y, w: 1.9, h: 0.5, fontSize: 11, color: C.text2, valign: "middle", objectName: "nota duración " + dur[i][0] });
   }
-  texto(s, "Con q de la literatura, dos años de campaña bastan para " + c("DurLitDVeinticuatro") + " %: la imitación sostiene la difusión una vez sembrados suficientes adoptantes.", { x: 5.6, y: 4.3, w: 3.9, h: 0.7, fontSize: 11, color: C.text1, valign: "top", objectName: "lectura duración" });
+  texto(s, "Con q de la literatura, dos años de campaña bastan para " + c("DurLitDVeinticuatro") + " % (el " + c("DurLitFraccionVeinticuatro") + " % del efecto): la imitación sostiene la difusión una vez sembrados suficientes adoptantes.", { x: 5.6, y: 4.3, w: 3.9, h: 0.7, fontSize: 11, color: C.text1, valign: "top", objectName: "lectura duración" });
   notas(s, "Duvan · 11:00–11:40", "El tercer experimento interrumpe la campaña después de cierto número de meses. El rendimiento es fuertemente decreciente: los primeros seis meses elevan la adopción final de " + c("DurCalDCero") + " a " + c("DurCalDSeis") + " %, dos años la llevan a " + c("DurCalDVeinticuatro") + " % y una campaña permanente a " + c("DurCalDCientoveinte") + " %. Con la imitación de la literatura, dos años bastan para " + c("DurLitDVeinticuatro") + " %. La publicidad vale más al comienzo, cuando la influencia social todavía es débil.");
 
   // ================================================================ 16. Demostración
@@ -395,8 +395,8 @@ const PCT = (k) => c(k) + " %";
   s = pres.addSlide({ masterName: "OSCURA", sectionTitle: "Cierre" });
   s.addText("Conclusiones", { placeholder: "title" });
   const concl = [
-    ["FiRadio", "La publicidad es la condición del despegue", "Con los coeficientes calibrados, la difusión orgánica llega a menos del " + c("SinCalKDieciseis") + " % en diez años; con campaña permanente, a más del " + c("ConCalKDos") + " %.", C.accent2],
-    ["FiClock", "Su efecto se concentra al inicio", "Dos años de campaña capturan más de la mitad del efecto de una permanente; con imitación fuerte, casi todo.", C.accent4],
+    ["FiRadio", "La publicidad es la condición del despegue", "Con los coeficientes calibrados, la difusión orgánica llega como máximo al " + c("SinCalMax") + " % en diez años; con campaña permanente, al menos al " + c("ConCalMin") + " %.", C.accent2],
+    ["FiClock", "Su efecto se concentra al inicio", "Dos años de campaña logran el " + c("DurCalFraccionVeinticuatro") + " % del efecto de una permanente; con imitación fuerte, el " + c("DurLitFraccionVeinticuatro") + " %.", C.accent4],
     ["FiShare2", "La red importa cuando la difusión es orgánica", "Más densidad y caminos cortos aceleran; el agrupamiento frena; los hubs generan cascadas. Con publicidad, la estructura deja de importar.", C.accent4],
   ];
   for (let i = 0; i < concl.length; i++) {
@@ -409,7 +409,7 @@ const PCT = (k) => c(k) + " %";
     { text: "Validación: ", options: { bold: true, color: C.accent4 } }, { text: "error de " + c("AbmRmsePru") + " puntos porcentuales en la partición de prueba, comparable al modelo agregado de Bass (" + c("BassRmsePru") + ").", options: { breakLine: true } },
     { text: "Limitaciones y trabajo futuro: ", options: { bold: true, color: C.accent4 } }, { text: "coeficientes homogéneos, red estática, p y q poco identificables con datos agregados; umbrales heterogéneos, redes dinámicas y calibración con datos colombianos." },
   ], { x: 0.5, y: 4.2, w: 9.0, h: 0.85, fontSize: 11, color: C.background1, valign: "top", objectName: "validación y limitaciones" });
-  notas(s, "Duvan · 13:30–14:30", "Tres conclusiones. Primera: la publicidad no es un acelerador sino la condición del despegue. Segunda: su efecto se concentra en los primeros meses, así que una campaña corta e intensa rinde casi tanto como una permanente. Tercera: la estructura de la red solo cambia el resultado cuando la difusión es orgánica. El modelo quedó validado contra datos que no usamos para calibrar, con un error comparable al del modelo de Bass. Como limitaciones, los coeficientes son homogéneos y la red es estática; el siguiente paso sería calibrarlo con datos colombianos.");
+  notas(s, "Duvan · 13:30–14:30", "Tres conclusiones. Primera: la publicidad no es un acelerador sino la condición del despegue. Segunda: su efecto se concentra en los primeros meses: dos años de campaña logran el " + c("DurCalFraccionVeinticuatro") + " % del efecto de una permanente, y el " + c("DurLitFraccionVeinticuatro") + " % con imitación fuerte. Tercera: la estructura de la red solo cambia el resultado cuando la difusión es orgánica. El modelo quedó validado contra datos que no usamos para calibrar, con un error comparable al del modelo de Bass. Como limitaciones, los coeficientes son homogéneos y la red es estática; el siguiente paso sería calibrarlo con datos colombianos.");
 
   // ================================================================ 18. Referencias
   s = pres.addSlide({ masterName: "CONTENIDO", sectionTitle: "Cierre" });
