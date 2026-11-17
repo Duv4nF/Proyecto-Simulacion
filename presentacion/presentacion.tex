@@ -26,55 +26,47 @@
 \exhyphenpenalty=10000
 
 % ------------------------------------------------------------------ colores
-% terracota = publicidad (con campaña), azul = imitación (sin campaña), igual que en el modelo y las figuras
-\definecolor{papel}{HTML}{FBFAF6}
-\definecolor{tinta}{HTML}{1F2933}
-\definecolor{secundario}{HTML}{5E6670}
-\definecolor{tenue}{HTML}{8C8A85}
-\definecolor{borde}{HTML}{B9B4AA}
-\definecolor{claro}{HTML}{F1EEE7}
-\definecolor{azul}{HTML}{1E66A8}
-\definecolor{azulclaro}{HTML}{8DB3D6}
-\definecolor{azulfondo}{HTML}{E4EDF6}
-\definecolor{terracota}{HTML}{C2502A}
-\definecolor{terracotafondo}{HTML}{F7E6DE}
+% fondo blanco, texto casi negro y un solo acento (azul oscuro) para los títulos
+\definecolor{tinta}{HTML}{1A1A1A}
+\definecolor{secundario}{HTML}{555555}
+\definecolor{tenue}{HTML}{808080}
+\definecolor{borde}{HTML}{999999}
+\definecolor{claro}{HTML}{F0F0F0}
+\definecolor{azul}{HTML}{1F4E79}
+\definecolor{azulclaro}{HTML}{8DA9C4}
+\definecolor{azulfondo}{HTML}{E3EAF1}
 
-\setbeamercolor{background canvas}{bg=papel}
+\setbeamercolor{background canvas}{bg=white}
 \setbeamercolor{normal text}{fg=tinta}
-\setbeamercolor{structure}{fg=azul}
-\setbeamercolor{frametitle}{fg=tinta}
-\setbeamercolor{alerted text}{fg=terracota}
-\setbeamercolor{item}{fg=terracota}
-\setbeamercolor{enumerate item}{fg=terracota}
+\setbeamercolor{structure}{fg=tinta}
+\setbeamercolor{frametitle}{fg=azul}
+\setbeamercolor{alerted text}{fg=tinta}
+\setbeamercolor{item}{fg=tinta}
+\setbeamercolor{enumerate item}{fg=tinta}
 
 % ------------------------------------------------------------------ plantillas
 \setbeamertemplate{navigation symbols}{}
 \setbeamersize{text margin left=13mm, text margin right=13mm}
 \setbeamerfont{frametitle}{size=\Large}
-\newcommand{\seccion}{}
 \setbeamertemplate{frametitle}{%
-  \vskip6mm%
-  {\scriptsize\addfontfeatures{LetterSpace=12}\color{terracota}\MakeUppercase{\seccion}}\par\vskip1mm%
-  {\usebeamerfont{frametitle}\plexmedia\color{tinta}\insertframetitle\par}\vskip0.5mm}
+  \vskip7mm%
+  {\usebeamerfont{frametitle}\plexmedia\color{azul}\insertframetitle\par}\vskip1mm}
 \setbeamertemplate{footline}{%
-  \hbox to \paperwidth{\hskip13mm{\fontsize{6}{7}\selectfont\color{tenue}Delgado · Monroy · Baquero\quad Universidad de los Llanos}%
+  \hbox to \paperwidth{\hskip13mm{\fontsize{6}{7}\selectfont\color{tenue}Simulación Computacional, Universidad de los Llanos}%
   \hfill{\fontsize{6}{7}\selectfont\color{tenue}\insertframenumber\,/\,\inserttotalframenumber}\hskip13mm}\vskip4mm}
-\setbeamertemplate{itemize item}{\raisebox{0.3ex}{\color{terracota}\rule{0.8ex}{0.8ex}}}
-\setbeamertemplate{enumerate item}{\color{terracota}\plexmedia\insertenumlabel.}
+\setbeamertemplate{itemize item}{\raisebox{0.3ex}{\color{tinta}\rule{0.7ex}{0.7ex}}}
+\setbeamertemplate{enumerate item}{\color{tinta}\insertenumlabel.}
 \setbeamertemplate{itemize/enumerate body begin}{\raggedright}
 \setlength{\leftmargini}{1.3em}
 \setbeamertemplate{note page}{\vskip5mm\hskip6mm\begin{minipage}[t]{0.42\paperwidth}\vskip0pt\insertslideintonotes{0.4}\end{minipage}%
   \hskip4mm\begin{minipage}[t]{0.4\paperwidth}\vskip0pt\raggedright\footnotesize
-  {\scriptsize\color{terracota}DIAPOSITIVA \insertframenumber}\par\vskip2mm\insertnote\end{minipage}}
+  {\scriptsize\color{secundario}Diapositiva \insertframenumber}\par\vskip2mm\insertnote\end{minipage}}
 
 \lstset{basicstyle=\ttfamily\fontsize{7.2}{8.6}\selectfont\color{tinta}, keywordstyle=\color{azul}, columns=fullflexible,
   keepspaces=true, frame=none, aboveskip=0pt, belowskip=0pt,
   morekeywords={to,end,ask,let,set,if,with,count,any?,random-float,turtles,link-neighbors,not}}
 
 % ------------------------------------------------------------------ utilidades
-\newcommand{\cifra}[2]{% número grande + leyenda
-  \begin{minipage}[t]{\linewidth}\raggedright{\plexmedia\fontsize{24}{26}\selectfont\color{azul}#1\par}\vskip1mm
-  {\small\color{secundario}#2\par}\end{minipage}}
 \newcommand{\nota}[1]{{\raggedright\footnotesize\color{secundario}#1\par}}
 \newcommand{\fuente}[1]{\par\vfill{\fontsize{6}{7}\selectfont\color{tenue}#1}\par\vskip1mm}
 \newcommand{\referencia}[1]{\par\hangindent=1.4em\hangafter=1 #1\par}
@@ -90,11 +82,11 @@
   \begin{columns}[c,totalwidth=\textwidth]
     \begin{column}{0.62\textwidth}
       \raggedright
-      {\scriptsize\addfontfeatures{LetterSpace=12}\color{terracota}PROYECTO 14 · SIMULACIÓN COMPUTACIONAL}\par\vskip5mm
-      {\plexmedia\fontsize{21}{26}\selectfont\color{tinta}Publicidad y redes sociales en la difusión de innovaciones\par}\vskip3mm
+      {\small\color{secundario}Simulación Computacional, proyecto 14\par}\vskip4mm
+      {\plexmedia\fontsize{21}{26}\selectfont\color{azul}Publicidad y redes sociales en la difusión de innovaciones\par}\vskip3mm
       {\color{secundario}Un modelo basado en agentes de la PS5 y del lanzamiento de GTA\,6\par}\vskip8mm
       {\small Jesus Gregorio Delgado\\ David Andres Monroy Aguiar\\ Duvan Felipe Baquero Cerquera\par}\vskip5mm
-      {\scriptsize\color{tenue}Ingeniería de Sistemas · Universidad de los Llanos\\ 17 de noviembre de 2026\par}
+      {\scriptsize\color{tenue}Ingeniería de Sistemas, Universidad de los Llanos\\ 17 de noviembre de 2026\par}
     \end{column}
     \begin{column}{0.36\textwidth}
       \includegraphics[width=\linewidth]{portada_red.png}
@@ -105,26 +97,20 @@
 \note{\textbf{Jesus (0:40).} Buenos días. Somos Jesus, David y Duvan. Nuestro proyecto simula cómo se difunde un producto nuevo cuando cada persona decide influida por la publicidad y por sus contactos. Lo aplicamos a dos casos de actualidad: la PS5, una tecnología, y GTA\,6, un videojuego que sale este jueves. Lo construimos en NetLogo, lo calibramos con datos reales y lo usamos para comparar escenarios que no se pueden observar.}
 
 % =================================================================== 2. motivación
-\renewcommand{\seccion}{Motivación}
-\begin{frame}{Dos lanzamientos, dos maneras de difundirse}
-  \vskip4mm
-  \begin{columns}[t,totalwidth=\textwidth]
-    \begin{column}{0.31\textwidth}\cifra{\cifraPsUnidadesFin\,M}{PS5 vendidas de noviembre de 2020 a septiembre de 2026}\end{column}
-    \begin{column}{0.31\textwidth}\cifra{19 nov.}{sale GTA\,6, solo para consolas de esta generación}\end{column}
-    \begin{column}{0.31\textwidth}\cifra{90\,M}{vistas del primer tráiler de GTA\,6 en 24 horas}\end{column}
-  \end{columns}
-  \vskip8mm
-  \begin{itemize}
-    \item Bass: un producto se difunde por \textcolor{terracota}{publicidad} (externa) e \textcolor{azul}{imitación} (voz a voz).
-    \item La PS5 crece por imitación; un gran estreno vende casi todo al salir.
+\begin{frame}{Motivación}
+  \vskip3mm
+  \begin{itemize}\setlength{\itemsep}{2.5mm}
+    \item La PS5 lleva \cifraPsUnidadesFin\ millones de unidades vendidas entre noviembre de 2020 y septiembre de 2026.
+    \item GTA\,6 sale el 19 de noviembre de 2026, solo para las consolas de esta generación. Su primer tráiler tuvo 90 millones de vistas en 24 horas.
+    \item Según Bass, un producto se difunde por publicidad (influencia externa) y por imitación (voz a voz).
+    \item La PS5 creció sobre todo por imitación. Un gran estreno vende casi todo al salir.
   \end{itemize}
   \fuente{Sony Interactive Entertainment, Business Data \& Sales; Guinness World Records (2023).}
 \end{frame}
 \note{\textbf{Jesus (0:45).} La PS5 ya pasa de \cifraPsUnidadesFin\ millones de unidades, y sobre esa base sale GTA\,6 el 19 de noviembre, después de una campaña que rompió récords: 90 millones de vistas del primer tráiler en un día. Bass explicó la difusión con dos fuerzas: la publicidad, que llega a todos, y la imitación, que depende de cuántos ya adoptaron. Cuando manda la imitación sale la curva en S, como en la PS5; cuando manda la publicidad, las ventas se concentran en el lanzamiento.}
 
 % =================================================================== 3. problema
-\renewcommand{\seccion}{Problema}
-\begin{frame}{El modelo agregado no ve la red social}
+\begin{frame}{Problema}
   \vskip2mm
   \begin{columns}[c,totalwidth=\textwidth]
     \begin{column}{0.52\textwidth}
@@ -145,34 +131,22 @@
 \note{\textbf{Jesus (0:50).} El modelo de Bass describe bien las curvas agregadas, pero supone que todos influyen sobre todos, como en la red de la izquierda. En la vida real la influencia viaja por una red concreta, como la de la derecha. Eso deja cuatro preguntas sin responder: qué pasa sin publicidad, si importa la estructura de la red, cuánto se pierde con una campaña corta y si una consola y un videojuego responden igual.}
 
 % =================================================================== 4. justificación
-\renewcommand{\seccion}{Justificación}
-\begin{frame}{Simular permite probar lo que no se puede observar}
-  \vskip5mm
-  \begin{columns}[t,totalwidth=\textwidth]
-    \begin{column}{0.3\textwidth}
-      {\plexmedia\color{azul}Individuos y red}\par\vskip2mm
-      \nota{Cada persona es un agente con sus contactos y una regla de decisión.}
-    \end{column}
-    \begin{column}{0.3\textwidth}
-      {\plexmedia\color{azul}Contrafactuales}\par\vskip2mm
-      \nota{Lanzar sin publicidad, cambiar la red o acortar la campaña: imposible de observar en la realidad.}
-    \end{column}
-    \begin{column}{0.3\textwidth}
-      {\plexmedia\color{azul}Datos reales}\par\vskip2mm
-      \nota{PS5: calibrada y evaluada con ventas oficiales. GTA\,6, sin ventas aún: por analogía con GTA\,V.}
-    \end{column}
-  \end{columns}
-  \vskip10mm
-  \nota{NetLogo: libre, el modelo completo en un archivo y BehaviorSpace para repetir cada escenario 30 veces.}
+\begin{frame}{Justificación}
+  \vskip3mm
+  \begin{itemize}\setlength{\itemsep}{2.5mm}
+    \item Cada persona es un agente con sus contactos y una regla de decisión.
+    \item Se pueden probar escenarios que no se observan en la realidad: lanzar sin publicidad, cambiar la red o acortar la campaña.
+    \item La PS5 se calibra y se evalúa con ventas oficiales. GTA\,6 todavía no tiene ventas y se parametriza por analogía con GTA\,V.
+    \item NetLogo es libre, guarda el modelo completo en un archivo y BehaviorSpace repite cada escenario 30 veces.
+  \end{itemize}
 \end{frame}
 \note{\textbf{Jesus (0:50).} La simulación basada en agentes responde esas preguntas porque representa a cada persona y sus contactos, y permite correr escenarios que no se pueden observar, como lanzar sin publicidad. Para que no fuera un ejercicio solo cualitativo, la PS5 se calibró con las ventas oficiales de Sony y se evaluó con datos que no usamos para ajustar. GTA\,6 todavía no tiene ventas, así que sus parámetros salen por analogía con GTA\,V, que es la práctica estándar antes de un lanzamiento.}
 
 % =================================================================== 5. objetivos
-\renewcommand{\seccion}{Objetivos}
-\begin{frame}{Qué nos propusimos}
+\begin{frame}{Objetivos}
   \vskip2mm
-  {\plexmedia General.} Medir el efecto de la publicidad y de la red sobre la adopción final, en la PS5 y en GTA\,6.\par\vskip5mm
-  {\plexmedia Específicos}\par\vskip1mm
+  {\bfseries Objetivo general}\par\vskip1mm Medir el efecto de la publicidad y de la red sobre la adopción final, en la PS5 y en GTA\,6.\par\vskip5mm
+  {\bfseries Objetivos específicos}\par\vskip1mm
   \begin{enumerate}
     \item Implementar en NetLogo el modelo de Bass en red, con tres tipos de red.
     \item Calibrar con la PS5 (entrenamiento, validación, prueba) y parametrizar GTA\,6 por analogía.
@@ -183,15 +157,14 @@
 \note{\textbf{Jesus (0:40).} El objetivo general es medir el efecto de la publicidad y de la red sobre la adopción final, en la PS5 y en GTA\,6. Los específicos: implementarlo en NetLogo con tres tipos de red, calibrarlo con partición entrenamiento-validación-prueba, evaluar los escenarios con réplicas y verificarlo con una reimplementación independiente en Python.}
 
 % =================================================================== 6. modelo
-\renewcommand{\seccion}{Metodología}
-\begin{frame}{Cada mes, cada persona decide: publicidad y vecinos}
+\begin{frame}{Metodología: regla de adopción}
   \vskip4mm
-  \begin{center}{\Large $P_i = 1 - (1 - \textcolor{terracota}{p\,a_t})\,(1 - \textcolor{azul}{q\,f_i})$}\end{center}
+  \begin{center}{\Large $P_i = 1 - (1 - p\,a_t)\,(1 - q\,f_i)$}\end{center}
   \vskip5mm
   \begin{columns}[T,totalwidth=\textwidth]
     \begin{column}{0.46\textwidth}
-      {\color{terracota}\plexmedia publicidad}\par\nota{$p$: probabilidad mensual de que la campaña convenza; $a_t=1$ mientras está activa.}\par\vskip3mm
-      {\color{azul}\plexmedia imitación}\par\nota{$q$ por $f_i$, la fracción de vecinos que ya adoptó.}
+      {\bfseries publicidad}\par\nota{$p$: probabilidad mensual de que la campaña convenza; $a_t=1$ mientras está activa.}\par\vskip3mm
+      {\bfseries imitación}\par\nota{$q$ por $f_i$, la fracción de vecinos que ya adoptó.}
     \end{column}
     \begin{column}{0.48\textwidth}
       \vskip-\topsep
@@ -206,7 +179,7 @@
 \note{\textbf{Jesus (1:00).} Cada agente es un nodo. Cada mes, quien no ha adoptado lo hace con esta probabilidad: la publicidad lo convence con probabilidad $p$ mientras la campaña esté activa, y sus vecinos con $q$ por la fracción de vecinos que ya adoptaron. Las decisiones se aplican todas a la vez al cerrar el mes y la adopción es irreversible. Si la red fuera completa, el modelo recuperaría la curva de Bass; la diferencia entre ambas es el efecto de la red. Usamos tres redes: aleatoria, mundo pequeño, con grupos cerrados, y libre de escala, con pocos nodos muy conectados. \emph{Le paso la palabra a David.}}
 
 % =================================================================== 7. esquema
-\begin{frame}{Del dato al escenario}
+\begin{frame}{Metodología: esquema del sistema}
   \vskip2mm
   \begin{center}
   \begin{tikzpicture}[
@@ -224,15 +197,15 @@
     \draw[flecha] (d) -- (c); \draw[flecha] (c) -- (m);
     \draw[flecha] (m) -- (e); \draw[flecha] (e) -- (a);
     % interior del modelo
-    \node[caja, fill=terracotafondo, draw=terracota, text width=27mm, minimum height=9mm] (camp) at (1.6,-2.5)
+    \node[caja, fill=claro, draw=borde, text width=27mm, minimum height=9mm] (camp) at (1.6,-2.5)
       {\plexmedia Campaña\\[-1pt]{\scriptsize $p\,a_t$}};
     \node[caja, fill=azulfondo, draw=azul, text width=27mm, minimum height=9mm] (red) at (1.6,-3.75)
       {\plexmedia Red social\\[-1pt]{\scriptsize $q\,f_i$}};
     \node[caja, fill=white, draw=azul, line width=0.8pt, text width=44mm, minimum height=21mm] (regla) at (6.3,-3.125)
       {\plexmedia Regla de adopción\\[4pt]$P_i = 1-(1-p\,a_t)(1-q\,f_i)$};
     \node[caja, text width=22mm, minimum height=12mm] (est) at (10.62,-3.125) {\plexmedia Estado\\[-1pt]{\scriptsize adopta y no vuelve atrás}};
-    \draw[flecha, draw=terracota] (camp.east) -- (regla.west |- camp.east);
-    \draw[flecha, draw=azul] (red.east) -- (regla.west |- red.east);
+    \draw[flecha] (camp.east) -- (regla.west |- camp.east);
+    \draw[flecha] (red.east) -- (regla.west |- red.east);
     \draw[flecha] (regla) -- (est);
     \begin{scope}[on background layer]
       \node[draw=azul, dashed, rounded corners=3pt, fit=(camp)(red)(regla)(est), inner sep=2.5mm] (int) {};
@@ -245,7 +218,7 @@
 \note{\textbf{David (0:40).} Arriba el flujo: las ventas reales dan los parámetros, la PS5 por calibración de Bass y GTA\,6 por analogía con GTA\,V; NetLogo simula; BehaviorSpace corre los cuatro experimentos; Python calcula las medidas. Abajo, lo que pasa dentro del modelo cada mes: la campaña y la red alimentan la regla, que decide si cada persona adopta.}
 
 % =================================================================== 8. implementación
-\begin{frame}[fragile]{Implementación en NetLogo}
+\begin{frame}[fragile]{Metodología: implementación en NetLogo}
   \vskip1mm
   \begin{columns}[c,totalwidth=\textwidth]
     \begin{column}{0.47\textwidth}
@@ -275,8 +248,7 @@ end
 \note{\textbf{David (0:50).} Esto es NetLogo con la extensión nw. A la izquierda, la interfaz con el caso PS5 en una red libre de escala: en azul los que ya adoptaron, en naranja los de este mes, y los nodos grandes son los más conectados. A la derecha, el procedimiento decidir: cada no adoptante cuenta qué fracción de sus vecinos ya adoptó y sortea su decisión con la fórmula. Un procedimiento aparte, actualizar, aplica todas las decisiones a la vez para que el orden de los agentes no afecte el resultado. El selector de caso carga los parámetros de la PS5 o de GTA\,6 con un clic.}
 
 % =================================================================== 9. datos PS5
-\renewcommand{\seccion}{Conjunto de datos}
-\begin{frame}{La PS5: \cifraTrimestres\ trimestres de ventas oficiales de Sony}
+\begin{frame}{Conjunto de datos: ventas de la PS5}
   \begin{columns}[c,totalwidth=\textwidth]
     \begin{column}{0.6\textwidth}
       \includegraphics[width=\linewidth]{serie_ps5.png}
@@ -294,7 +266,7 @@ end
 \note{\textbf{David (0:40).} La serie real son las unidades de PS5 que Sony publica cada trimestre: \cifraTrimestres\ trimestres, de \cifraPsUnidadesIni\ a \cifraPsUnidadesFin\ millones. La expresamos como porcentaje de la base de la PS4, \cifraUniverso\ millones, que fijamos antes de mirar los datos de prueba. El segundo conjunto lo genera la simulación: \cifraCorridas\ corridas de mil agentes.}
 
 % =================================================================== 10. analogía GTA V
-\begin{frame}{GTA\,6 aún no tiene ventas: lo parametrizamos con GTA\,V}
+\begin{frame}{Conjunto de datos: GTA V como análogo de GTA\,6}
   \begin{columns}[c,totalwidth=\textwidth]
     \begin{column}{0.54\textwidth}
       \includegraphics[width=0.94\linewidth]{analogia_gtav.png}
@@ -302,7 +274,7 @@ end
     \begin{column}{0.42\textwidth}
       {\small\begin{itemize}
         \item GTA\,V: \cifraGtavSeisSemanas\,M en seis semanas y \cifraGtavMeseta\,M al año, sobre \cifraGtaBase\,M de consolas.
-        \item Mismo ajuste de Bass: publicidad de \textcolor{terracota}{\cifraGtaP} al mes, unas \cifraGtaRazonPQ\ veces la imitación.
+        \item Mismo ajuste de Bass: publicidad de \cifraGtaP al mes, unas \cifraGtaRazonPQ\ veces la imitación.
         \item GTA\,6 entre dueños de PS5: potencial \cifraGtaM\,\%, \cifraGtaIniciales\,\% el primer día, \cifraGtaHorizonte\ meses.
       \end{itemize}}
     \end{column}
@@ -312,16 +284,15 @@ end
 \note{\textbf{David (0:50).} GTA\,6 no tiene ventas todavía, así que usamos el método de analogía: tomamos el lanzamiento más parecido, GTA\,V. Vendió \cifraGtavSeisSemanas\ millones en seis semanas y se estabilizó en \cifraGtavMeseta\ millones, sobre \cifraGtaBase\ millones de consolas. Con la imitación fijada en la de la PS5, el ajuste atribuye el salto del lanzamiento a la publicidad: \cifraGtaP\ al mes, unas \cifraGtaRazonPQ\ veces la imitación, lo contrario de la PS5. Así modelamos GTA\,6 entre los dueños de PS5, con un potencial del \cifraGtaM\,\% y dos años de horizonte.}
 
 % =================================================================== 11. diseño experimental
-\renewcommand{\seccion}{Diseño experimental}
-\begin{frame}{Cuatro experimentos, 30 réplicas por escenario}
+\begin{frame}{Diseño experimental}
   \vskip2mm
   \begin{tikzpicture}[x=1mm, y=1mm, font=\scriptsize]
     \fill[azul] (0,0) rectangle (60,10);
     \fill[azulclaro] (61,0) rectangle (92,10);
-    \fill[terracota] (93,0) rectangle (134,10);
-    \node[text=white, align=center] at (30,5) {entrenamiento\\dic.\,2020--dic.\,2023 · \cifraObsEnt\ trimestres};
-    \node[text=tinta, align=center] at (76.5,5) {validación\\2024 · \cifraObsVal\ trimestres};
-    \node[text=white, align=center] at (113.5,5) {prueba\\2025--2026 · \cifraObsPru\ trimestres};
+    \fill[tinta] (93,0) rectangle (134,10);
+    \node[text=white, align=center] at (30,5) {entrenamiento\\dic.\,2020 a dic.\,2023, \cifraObsEnt\ trimestres};
+    \node[text=tinta, align=center] at (76.5,5) {validación\\2024, \cifraObsVal\ trimestres};
+    \node[text=white, align=center] at (113.5,5) {prueba\\2025 a 2026, \cifraObsPru\ trimestres};
     \node[text=secundario] at (30,-3) {ajusta $p$ y $q$};
     \node[text=secundario] at (76.5,-3) {elige $m$ y la red};
     \node[text=secundario] at (113.5,-3) {solo evalúa};
@@ -342,12 +313,11 @@ end
 \note{\textbf{David (0:50).} La serie de la PS5 se parte en el tiempo: con entrenamiento estimamos $p$ y $q$; como el potencial no se puede estimar en plena fase de crecimiento, lo elegimos en validación, igual que la red; la prueba solo evalúa. Corremos cuatro experimentos, los tres de escenarios para los dos casos: publicidad por densidad, publicidad por topología y duración de la campaña, más la calibración. Cada combinación se repite 30 veces. \emph{Duvan presenta las medidas y los resultados.}}
 
 % =================================================================== 12. medidas
-\renewcommand{\seccion}{Medidas de desempeño}
-\begin{frame}{Cómo medimos}
+\begin{frame}{Medidas de desempeño}
   \vskip4mm
   \begin{columns}[T,totalwidth=\textwidth]
     \begin{column}{0.47\textwidth}
-      {\plexmedia\color{azul}Escenarios}\par\vskip1mm
+      {\bfseries Escenarios}\par\vskip1mm
       {\small\begin{itemize}
         \item \alert{Adopción final}: \% de la población que adoptó al final del período (PS5: \cifraHorizontePs\ meses; GTA\,6: \cifraHorizonteGta).
         \item Mes del 50\,\% y mes del pico de compras.
@@ -355,7 +325,7 @@ end
       \end{itemize}}
     \end{column}
     \begin{column}{0.47\textwidth}
-      {\plexmedia\color{azul}Ajuste a la serie real}\par\vskip1mm
+      {\bfseries Ajuste a la serie real}\par\vskip1mm
       {\small\begin{itemize}
         \item RMSE: raíz del error cuadrático medio, en puntos porcentuales.
         \item MAPE: error porcentual absoluto medio.
@@ -367,22 +337,24 @@ end
 \note{\textbf{Duvan (0:30).} La medida principal, la que pide el enunciado, es el porcentaje de adopción al final del período: seis años para la PS5 y dos para GTA\,6. La complementamos con el mes del 50\,\% y el mes del pico de compras. Frente a la serie real usamos RMSE y MAPE por partición. Todo con 30 réplicas e intervalos del 95\,\%.}
 
 % =================================================================== 13. calibración
-\renewcommand{\seccion}{Resultados}
-\begin{frame}{El modelo sigue la serie de prueba de la PS5}
+\begin{frame}{Resultados: calibración y prueba con la PS5}
   \begin{columns}[c,totalwidth=\textwidth]
     \begin{column}{0.64\textwidth}
       \includegraphics[width=\linewidth]{fig_calibracion.png}
     \end{column}
     \begin{column}{0.32\textwidth}
-      \cifra{\cifraAbmRmsePru\ pp}{error en prueba del modelo de agentes (Bass: \cifraBassRmsePru)}\par\vskip5mm
-      \nota{Bass anual: $p$\,=\,\cifraBassP, $q$\,=\,\cifraBassQ; la imitación pesa \cifraBassRazonQP\ veces más. Red elegida en validación: \cifraAbmSelRedNombre, $k$\,=\,\cifraAbmSelK.}
+      {\small\begin{itemize}\setlength{\itemsep}{2mm}
+        \item Error en prueba del modelo de agentes: \cifraAbmRmsePru\ puntos porcentuales (Bass: \cifraBassRmsePru).
+        \item Bass anual: $p$\,=\,\cifraBassP\ y $q$\,=\,\cifraBassQ. La imitación pesa \cifraBassRazonQP\ veces más que la publicidad.
+        \item Red elegida en validación: \cifraAbmSelRedNombre\ con $k$\,=\,\cifraAbmSelK.
+      \end{itemize}}
     \end{column}
   \end{columns}
 \end{frame}
 \note{\textbf{Duvan (0:50).} El ajuste da $p$ = \cifraBassP\ y $q$ = \cifraBassQ\ anuales: en la PS5 la imitación pesa \cifraBassRazonQP\ veces más que la publicidad. En validación se eligió la \cifraAbmSelRedNombre\ con $k$ = \cifraAbmSelK. En prueba, que nunca usamos para ajustar, el error es de \cifraAbmRmsePru\ puntos, mayor que el de Bass, \cifraBassRmsePru, porque la red frena la difusión. Ambos quedan un poco por debajo del dato de Sony de noviembre de 2026, más de 100 millones: la PS5 probablemente superará la base de la PS4.}
 
 % =================================================================== 14. publicidad
-\begin{frame}{Sin publicidad, ninguno de los dos llega lejos}
+\begin{frame}{Resultados: adopción con y sin publicidad}
   \vskip1mm
   \begin{center}\includegraphics[width=0.9\linewidth]{publicidad_casos.png}\end{center}
   \vskip-3mm
@@ -391,36 +363,40 @@ end
 \note{\textbf{Duvan (0:50).} El resultado central. En la PS5, sin publicidad la adopción queda entre el \cifraPsSinMin\ y el \cifraPsSinMax\,\% en seis años; con campaña, entre el \cifraPsConMin\ y el \cifraPsConMax\,\%, con la curva en S. En GTA\,6 la campaña lo decide todo: con ella se alcanza el potencial casi en el primer mes; sin ella la adopción apenas pasa de los compradores del primer día. Sin publicidad, la PS5 simplemente no despega.}
 
 % =================================================================== 15. densidad y topología
-\begin{frame}{La red pesa sobre todo cuando no hay publicidad}
+\begin{frame}{Resultados: densidad de la red}
   \begin{columns}[c,totalwidth=\textwidth]
     \begin{column}{0.66\textwidth}
       \includegraphics[width=\linewidth]{densidad.png}
     \end{column}
     \begin{column}{0.3\textwidth}
-      \cifra{×\,\cifraPsSinRazon}{adopción de la PS5 sin campaña al pasar de $k$\,=\,2 a 16}\par\vskip4mm
-      \nota{Con campaña, la misma diferencia solo la multiplica por \cifraPsConRazon. Sin campaña, la red de mundo pequeño es la topología más lenta.}
+      {\small\begin{itemize}\setlength{\itemsep}{2mm}
+        \item Sin campaña, pasar de $k$\,=\,2 a $k$\,=\,16 multiplica la adopción de la PS5 por \cifraPsSinRazon.
+        \item Con campaña, la misma diferencia solo la multiplica por \cifraPsConRazon.
+        \item Sin campaña, la red de mundo pequeño es la topología más lenta.
+      \end{itemize}}
     \end{column}
   \end{columns}
 \end{frame}
 \note{\textbf{Duvan (0:50).} En la PS5 sin publicidad, pasar de 2 a 16 contactos multiplica la adopción por \cifraPsSinRazon; con campaña solo por \cifraPsConRazon, porque la publicidad siembra adoptantes en toda la red. En la topología pasa lo mismo: sin campaña, la red de mundo pequeño es la más lenta de las tres, porque sus grupos cerrados atrapan la influencia, y la libre de escala la más variable, porque depende de si un nodo muy conectado adopta temprano. En GTA\,6 la red casi no cambia nada.}
 
 % =================================================================== 16. duración
-\begin{frame}{GTA\,6: basta un mes; PS5: la campaña necesita tiempo}
+\begin{frame}{Resultados: duración de la campaña}
   \begin{columns}[c,totalwidth=\textwidth]
     \begin{column}{0.58\textwidth}
       \includegraphics[width=\linewidth]{fraccion_duracion.png}
     \end{column}
     \begin{column}{0.38\textwidth}
-      \cifra{\cifraFraccionGtaDUno\,\%}{del efecto de una campaña permanente se logra con un mes en GTA\,6}\par\vskip5mm
-      \cifra{\cifraFraccionPsDDoce\,\%}{se logra con un año en la PS5 (dos años: \cifraFraccionPsDVeinticuatro\,\%)}
+      {\small\begin{itemize}\setlength{\itemsep}{2mm}
+        \item GTA\,6: un mes de campaña logra el \cifraFraccionGtaDUno\,\% del efecto de una campaña permanente.
+        \item PS5: un año logra el \cifraFraccionPsDDoce\,\% y dos años el \cifraFraccionPsDVeinticuatro\,\%.
+      \end{itemize}}
     \end{column}
   \end{columns}
 \end{frame}
 \note{\textbf{Duvan (0:40).} Si la campaña se corta, ¿cuánto se pierde? En GTA\,6, un solo mes ya logra el \cifraFraccionGtaDUno\,\% del efecto de una campaña permanente: el lanzamiento concentra casi todo. En la PS5 el rendimiento es gradual: un año logra el \cifraFraccionPsDDoce\,\% y dos años el \cifraFraccionPsDVeinticuatro\,\%, porque la imitación necesita tiempo para sostener la difusión. Los puntos de GTA\,6 que pasan apenas del 100\,\% son variación entre réplicas. \emph{David hace la demostración.}}
 
 % =================================================================== 17. demo
-\renewcommand{\seccion}{Demostración}
-\begin{frame}{En vivo en NetLogo}
+\begin{frame}{Demostración en NetLogo}
   \vskip1mm
   \begin{columns}[c,totalwidth=\textwidth]
     \begin{column}{0.4\textwidth}
@@ -431,7 +407,7 @@ end
       {\small\begin{enumerate}
         \item Caso \alert{GTA\,6} $\to$ configurar $\to$ simular: el pico llega en el primer mes.
         \item Campaña apagada: la adopción apenas pasa del \cifraGtaIniciales\,\%.
-        \item Caso \textcolor{azul}{PS5}: curva en S frente a la de Bass.
+        \item Caso PS5: curva en S frente a la de Bass.
       \end{enumerate}}
       \vskip2mm
       \nota{Si sobra tiempo: PS5 sin campaña y $k$ de 16 a 2; Herramientas $\to$ BehaviorSpace.}
@@ -441,8 +417,7 @@ end
 \note{\textbf{David (1:10).} Demostración en vivo; los pasos están en el guion. Hacer 1 a 3; los otros dos solo si sobra tiempo.}
 
 % =================================================================== 18. conclusiones
-\renewcommand{\seccion}{Conclusiones}
-\begin{frame}{Publicidad primero, red después}
+\begin{frame}{Conclusiones}
   \vskip2mm
   \begin{enumerate}
     \item PS5: sin campaña, a lo sumo \cifraPsSinMaxGlobal\,\%; con campaña, al menos \cifraPsConMin\,\%.
@@ -456,8 +431,7 @@ end
 \note{\textbf{Duvan (0:30).} Cuatro conclusiones. En la PS5, la publicidad es la condición del despegue. En GTA\,6, el primer mes de campaña decide el resultado. La red pesa sobre todo cuando no hay publicidad. Y el modelo quedó validado con datos que no usamos para ajustar y verificado con una reimplementación independiente.}
 
 % =================================================================== 19. referencias
-\renewcommand{\seccion}{Referencias}
-\begin{frame}{Fuentes}
+\begin{frame}{Referencias}
   \vskip0.5mm
   \raggedright\fontsize{8}{9.6}\selectfont
   \setlength{\parskip}{1.1mm}

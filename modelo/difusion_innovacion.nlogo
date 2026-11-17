@@ -42,6 +42,7 @@ turtles-own [
 
 to setup
   clear-all
+  ask patches [ set pcolor white ]
   if semilla != 0 [ random-seed semilla ]
   aplicar-caso
   crear-red
@@ -98,7 +99,7 @@ to crear-red
       disponer-resorte
     ]
   )
-  ask links [ set color gray - 3.5 ]
+  ask links [ set color gray + 2.5 ]
 end
 
 to disponer-resorte
