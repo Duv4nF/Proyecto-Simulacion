@@ -13,7 +13,7 @@ El caso de estudio pasó de los smartphones (Pew) a **PS5 como tecnología** y *
 ## Lo que falta por hacer
 
 1. **Revisar el artículo y las diapositivas** con las cifras finales y ensayar con ellas (la guía de estudio trae las preguntas probables y la tabla de cifras para memorizar).
-2. **Compilar el artículo en Overleaf** para la entrega (pasos en el README). `articulo/vista_previa_main.pdf` es la compilación local con la clase oficial; debería dar las mismas 8 páginas.
+2. **Compilar el artículo en Overleaf** para la entrega (pasos en el README). `articulo/articulo.pdf` es la compilación local con la clase oficial; debería dar las mismas 8 páginas.
 3. **Ensayar la demo** (diapositiva 17 y guion): abrir el modelo antes de empezar, con `poblacion` 500 y `dibujar-red?` encendido.
 4. **Si GTA 6 ya salió el día de la sustentación**, pueden mencionar las primeras cifras que publique Take-Two frente al escenario del modelo (las ventas deberían concentrarse en el primer mes).
 
