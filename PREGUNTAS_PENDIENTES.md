@@ -19,7 +19,7 @@ El caso de estudio pasó de los smartphones (Pew) a **PS5 como tecnología** y *
 
 ## Preguntas que necesito que respondan
 
-1. **Correos institucionales.** En `articulo/main.tex` puse `{jesus.delgado,david.monroy,duvan.baquero}@unillanos.edu.co` como suposición. ¿Cuáles son los reales?
+1. **Correos.** Resuelto: `articulo/main.tex` lleva `{jg.delgado,da.maguiar,df.baquero}@unillanos.edu.co`.
 2. **Orden de autores.** Jesus, David, Duvan (el orden de la publicación en el foro). ¿Lo cambiamos?
 3. **Reparto de la sustentación.** Propuse Jesus (1–6), David (7–10 y demo) y Duvan (11–16 y cierre), unos cinco minutos cada uno. ¿Quién maneja NetLogo en vivo? Esa persona debería hacer la demo.
 4. **Formato de entrega.** ¿El profesor pide un comprimido, el `.nlogo` aparte o un repositorio?
