@@ -1,17 +1,25 @@
 # Pendientes y preguntas para el grupo
 
-## Lo que falta por hacer (y quién puede hacerlo)
+## Lo que cambió (16 de noviembre de 2026)
 
-1. **Correr los experimentos en NetLogo.** Las figuras y cifras actuales vienen de la réplica del modelo en Python (`datos/resultados_python/`), que implementa exactamente la misma regla. Los resultados oficiales deben salir de NetLogo: se instala NetLogo, se corren los cuatro experimentos y se regenera todo. Se puede hacer en el computador de cualquiera del grupo con `modelo/correr_experimentos.bat` y luego los tres comandos de Python del README (los números cambiarán en decimales; el artículo y la presentación los leen automáticamente de `articulo/tablas/cifras.tex`).
-2. **Compilar el artículo con la clase oficial LNCS** (Overleaf, pasos en el README). La vista previa local usa una clase sustituta: la paginación real puede variar ±media página; quedó en 8 páginas con margen.
-3. **Captura de la interfaz de NetLogo** para la diapositiva 8 (opcional): hoy muestra las tres redes generadas con los colores del modelo; si quieren, reemplazarla por una captura real de la interfaz durante una corrida.
-4. **Ensayar la demo** (diapositiva 16 y `sustentacion/guion_sustentacion.md`): abrir el modelo antes de empezar y dejarlo configurado.
+El caso de estudio pasó de los smartphones (Pew) a **PS5 como tecnología** y **GTA 6 como innovación**:
+
+- La PS5 se calibra y valida con la serie oficial de Sony (24 trimestres, partición entrenamiento / validación / prueba). El universo del porcentaje de adopción es la base de PS4 (117 millones), fijado antes de ver la prueba.
+- GTA 6 sale el 19 de noviembre de 2026 y no tiene ventas; sus parámetros salen por analogía con GTA V (cifras oficiales de Take-Two y el dato del primer día de Guinness). Las cifras de la investigación se verificaron con dos verificadores independientes.
+- El modelo tiene un selector `caso` (PS5, GTA 6, libre) que carga los parámetros; la regla de adopción no cambió.
+- Experimentos nuevos en NetLogo 7.0.4 (1770 corridas) y réplica en Python para la verificación.
+- Artículo reescrito (8 páginas con referencias, 8 referencias, resumen de menos de 250 palabras), diapositivas nuevas en PDF (Beamer), guion y guía de estudio.
+
+## Lo que falta por hacer
+
+1. **Revisar el artículo y las diapositivas** con las cifras finales y ensayar con ellas (la guía de estudio trae las preguntas probables y la tabla de cifras para memorizar).
+2. **Compilar el artículo en Overleaf** para la entrega (pasos en el README). `articulo/articulo.pdf` es la compilación local con la clase oficial; debería dar las mismas 8 páginas.
+3. **Ensayar la demo** (diapositiva 17 y guion): abrir el modelo antes de empezar, con `poblacion` 500 y `dibujar-red?` encendido.
+4. **Si GTA 6 ya salió el día de la sustentación**, pueden mencionar las primeras cifras que publique Take-Two frente al escenario del modelo (las ventas deberían concentrarse en el primer mes).
 
 ## Preguntas que necesito que respondan
 
-1. **Correos institucionales.** En `articulo/main.tex` puse `{jesus.delgado,david.monroy,duvan.baquero}@unillanos.edu.co` como suposición. ¿Cuáles son los correos reales? (Es lo único inventado en el artículo.)
-2. **Orden de autores.** Dejé Jesus, David, Duvan (el orden de la publicación en el foro). ¿Lo cambiamos?
-3. **Reparto de la sustentación.** Propuse Jesus (apertura), David (metodología + demo), Duvan (resultados y cierre). ¿Quién va a manejar NetLogo en vivo? Esa persona debería llevar la demo.
-4. **Nombre de la carpeta/entrega.** ¿El profesor pide un solo archivo comprimido, el `.nlogo` aparte, o un repositorio? Puedo preparar el paquete en el formato que diga la guía.
-5. **Datos colombianos.** Busqué una serie pública de tenencia de smartphone en Colombia (DANE ECV, CRC) y no hay una comparable a la de Pew (solo cifras sueltas). Si alguno tiene acceso a una serie anual, el modelo se recalibra sin cambiar nada más y el artículo ganaría pertinencia local.
-6. **Idioma.** Todo quedó en español, como acordamos. Si el profesor prefiere el artículo en inglés, avísenme y lo traduzco manteniendo las cifras.
+1. **Correos institucionales.** En `articulo/main.tex` puse `{jesus.delgado,david.monroy,duvan.baquero}@unillanos.edu.co` como suposición. ¿Cuáles son los reales?
+2. **Orden de autores.** Jesus, David, Duvan (el orden de la publicación en el foro). ¿Lo cambiamos?
+3. **Reparto de la sustentación.** Propuse Jesus (1–6), David (7–10 y demo) y Duvan (11–16 y cierre), unos cinco minutos cada uno. ¿Quién maneja NetLogo en vivo? Esa persona debería hacer la demo.
+4. **Formato de entrega.** ¿El profesor pide un comprimido, el `.nlogo` aparte o un repositorio?

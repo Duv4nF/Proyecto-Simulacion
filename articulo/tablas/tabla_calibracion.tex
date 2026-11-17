@@ -1,16 +1,16 @@
-\begin{table}[tb]
+\begin{table}[htb]
 \centering
-\caption{RMSE del ABM (puntos porcentuales) frente a la serie real en validación / prueba, por topología y grado promedio. La estructura se elige por el menor RMSE en validación ($\star$); la partición de prueba no interviene en ninguna decisión. El modelo agregado de Bass obtiene 0,63 / 3,10.}
+\caption{RMSE (puntos) del modelo de agentes en validación / prueba, por topología y $k$; $\star$: elegida en validación. Bass: 2,14 / 3,22.}
 \label{tab:calibracion}
 \small
 \setlength{\tabcolsep}{4pt}
 \begin{tabular}{lrrr}
 \toprule
-modelo & $k=4$ & $k=8$ & $k=16$ \\
+red & $k=4$ & $k=8$ & $k=16$ \\
 \midrule
-ABM aleatoria & 4,77 / 5,23 & 2,69 / 4,03 & 2,39 / 4,27 \\
-ABM mundo pequeño & 4,35 / 4,87 & 2,73 / 3,95 & 2,42 / 3,91 \\
-ABM libre de escala & 3,77 / 4,82 & 2,56 / 4,10 & 1,92 / 3,96$\star$ \\
+aleatoria & 7,06 / 9,92 & 4,15 / 5,84 & 3,31 / 4,55 \\
+mundo pequeño & 6,22 / 8,91 & 3,94 / 6,07 & 3,20 / 4,91$^\star$ \\
+libre de escala & 6,82 / 9,38 & 4,09 / 6,07 & 3,86 / 5,10 \\
 \bottomrule
 \end{tabular}
 \end{table}

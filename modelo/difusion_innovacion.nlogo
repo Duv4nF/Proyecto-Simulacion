@@ -1,16 +1,21 @@
 ;; ============================================================================
-;; Difusión de innovación en una red social
+;; Difusión de innovaciones en una red social: PS5 (tecnología) y GTA 6 (innovación)
 ;; Modelo basado en agentes — Simulación Computacional, Universidad de los Llanos
 ;;
 ;; Cada agente es una persona en una red social. En cada mes, quien aún no ha
-;; adoptado la tecnología lo hace con probabilidad
+;; adoptado lo hace con probabilidad
 ;;
 ;;     P = 1 - (1 - p)·(1 - q·f)
 ;;
-;; donde p es la influencia externa (publicidad / medios masivos), q la
+;; donde p es la influencia externa (publicidad / campaña de lanzamiento), q la
 ;; influencia social (imitación) y f la fracción de sus vecinos que ya adoptó.
 ;; Es la versión en red del modelo de Bass (1969), siguiendo a Goldenberg,
 ;; Libai y Muller (2001) y a Rand y Rust (2011).
+;;
+;; El selector `caso` carga los parámetros de los dos casos del proyecto:
+;;   - PS5 (tecnología): calibrado con la serie oficial de ventas de Sony (2020-2026);
+;;   - GTA 6 (innovación): por analogía con el lanzamiento de GTA V (2013-2014);
+;;   - libre: usa los valores de los deslizadores.
 ;; ============================================================================
 
 extensions [ nw ]
@@ -38,6 +43,7 @@ turtles-own [
 to setup
   clear-all
   if semilla != 0 [ random-seed semilla ]
+  aplicar-caso
   crear-red
   ask turtles [
     set shape "circle"
@@ -53,6 +59,27 @@ to setup
   set bass-F (count turtles with [ adoptante? ]) / count turtles
   reset-ticks
   colorear
+end
+
+;; Parámetros de cada caso de estudio. No tocan la red, la campaña ni su duración,
+;; que son los factores de los experimentos; "libre" respeta los deslizadores.
+to aplicar-caso
+  if caso = "PS5 (tecnología)" [
+    ;; Bass calibrado con la serie de Sony (analisis/parametros_calibrados.json)
+    set p-publicidad 0.0081
+    set q-imitacion 0.0375
+    set potencial-mercado 100
+    set adoptantes-iniciales 2.5    ; innovadores de Rogers
+    set meses 72                    ; seis años desde el lanzamiento
+  ]
+  if caso = "GTA 6 (innovación)" [
+    ;; por analogía con GTA V (analisis/parametros_gta6.json)
+    set p-publicidad 0.69           ; campaña de lanzamiento
+    set q-imitacion 0.0375          ; imitación medida con la PS5
+    set potencial-mercado 21        ; meseta del primer año de GTA V sobre su base instalada
+    set adoptantes-iniciales 7      ; compradores del primer día
+    set meses 24                    ; dos años desde el lanzamiento
+  ]
 end
 
 to crear-red
@@ -162,7 +189,7 @@ to colorear
       not susceptible?        [ gray - 3 ]
       not adoptante?          [ gray ]
       mes-adopcion = ticks    [ orange ]      ; adoptó en el mes que acaba de terminar
-                              [ turquoise ])
+                              [ blue ])
   ]
 end
 @#$#@#$#@
@@ -288,7 +315,7 @@ grado-promedio
 grado-promedio
 2
 20
-6.0
+16.0
 2
 1
 vecinos
@@ -316,9 +343,9 @@ SLIDER
 299
 potencial-mercado
 potencial-mercado
-50
+0
 100
-100.0
+21.0
 1
 1
 %
@@ -332,8 +359,8 @@ SLIDER
 adoptantes-iniciales
 adoptantes-iniciales
 0
-10
-2.5
+20
+7.0
 0.5
 1
 %
@@ -357,9 +384,9 @@ SLIDER
 q-imitacion
 q-imitacion
 0
-0.2
-0.02
-0.001
+0.5
+0.0375
+0.0001
 1
 NIL
 HORIZONTAL
@@ -383,8 +410,8 @@ SLIDER
 p-publicidad
 p-publicidad
 0
-0.03
-0.0066
+1
+0.69
 0.0001
 1
 NIL
@@ -399,8 +426,8 @@ duracion-campaña
 duracion-campaña
 0
 240
-120.0
-6
+240.0
+1
 1
 meses
 HORIZONTAL
@@ -412,10 +439,10 @@ SLIDER
 543
 meses
 meses
-12
+6
 240
-120.0
-12
+24.0
+1
 1
 NIL
 HORIZONTAL
@@ -447,7 +474,7 @@ TEXTBOX
 452
 650
 500
-gris: aún no adopta · turquesa: adoptante · naranja: adoptó este mes · gris oscuro: fuera del potencial de mercado. El tamaño del nodo crece con su número de vecinos.
+gris: aún no adopta · azul: adoptante · naranja: adoptó este mes · gris oscuro: fuera del potencial de mercado. El tamaño del nodo crece con su número de vecinos.
 11
 5.0
 1
@@ -461,14 +488,14 @@ Adopción acumulada (%)
 mes
 % de la población
 0.0
-120.0
+24.0
 0.0
 100.0
 true
 true
 "" ""
 PENS
-"agentes en red" 1.0 0 -14835848 true "" "plot porcentaje-adopcion"
+"agentes en red" 1.0 0 -13345367 true "" "plot porcentaje-adopcion"
 "Bass agregado" 1.0 0 -7500403 true "" "plot porcentaje-bass"
 
 PLOT
@@ -480,7 +507,7 @@ Nuevos adoptantes por mes
 mes
 agentes
 0.0
-120.0
+24.0
 0.0
 10.0
 true
@@ -566,12 +593,22 @@ camino-medio
 1
 11
 
-TEXTBOX
+CHOOSER
 660
 470
 1035
-530
-Valores por defecto de p y q: coeficientes mensuales calibrados con la serie de adopción de smartphones de Pew Research (2011–2026); ver analisis/parametros_calibrados.json.
+515
+caso
+caso
+"libre" "PS5 (tecnología)" "GTA 6 (innovación)"
+2
+
+TEXTBOX
+660
+520
+1035
+580
+PS5: Bass calibrado con la serie oficial de Sony (2020–2026). GTA 6: parámetros por analogía con el lanzamiento de GTA V. libre: usa los deslizadores. El caso se aplica al pulsar configurar.
 11
 5.0
 1
@@ -579,45 +616,53 @@ Valores por defecto de p y q: coeficientes mensuales calibrados con la serie de 
 @#$#@#$#@
 ## ¿QUÉ ES?
 
-Un modelo basado en agentes de la **difusión de una innovación** (por ejemplo, los teléfonos inteligentes) en una población conectada por una red social. Cada agente decide en cada mes si adopta o no la tecnología, influido por dos fuerzas: la **publicidad** (influencia externa, que llega a todos por igual) y la **imitación** de sus vecinos en la red (influencia social).
+Un modelo basado en agentes de la **difusión de innovaciones** en una población conectada por una red social, aplicado a dos casos: la **PS5** como tecnología nueva (calibrada con datos reales) y **GTA 6** como innovación que se difunde entre los dueños de PS5 (escenario hipotético por analogía con GTA V). Cada agente decide en cada mes si adopta, influido por dos fuerzas: la **publicidad** (influencia externa, que llega a todos por igual) y la **imitación** de sus vecinos en la red (influencia social).
 
-La medida de desempeño principal es el **porcentaje de adopción al final del período**. El modelo permite comparar escenarios: difusión sin publicidad frente a una campaña activa, redes más o menos densas, y distintas estructuras de red.
+La medida de desempeño principal es el **porcentaje de adopción al final del período**. El modelo permite comparar escenarios: difusión sin publicidad frente a una campaña activa, redes más o menos densas, distintas estructuras de red y campañas de distinta duración.
 
 ## ¿CÓMO FUNCIONA?
 
 1. Se genera una red social con `poblacion` agentes y grado promedio `grado-promedio`, de uno de tres tipos: **aleatoria** (Erdős–Rényi), **mundo pequeño** (Watts–Strogatz, con probabilidad de reconexión `prob-reconexion`) o **libre de escala** (Barabási–Albert).
 2. Una fracción `potencial-mercado` de los agentes puede llegar a adoptar; el resto nunca lo hará (siguen en la red y diluyen la influencia de sus vecinos).
-3. Un `adoptantes-iniciales` % de agentes (los innovadores) empieza con la tecnología.
+3. Un `adoptantes-iniciales` % de agentes empieza con el producto (innovadores o compradores del primer día).
 4. En cada mes, cada agente que aún no ha adoptado observa la fracción `f` de sus vecinos que ya adoptó y adopta con probabilidad
 
    `P = 1 − (1 − p)·(1 − q·f)`
 
    donde `p = p-publicidad` mientras la campaña está activa (y 0 si no) y `q = q-imitacion`. Las decisiones de todos los agentes se aplican simultáneamente al terminar el mes.
 
-Esta regla es la versión en red del modelo de Bass. La gráfica muestra también la curva del **modelo agregado de Bass** con los mismos parámetros, que supone que todos influyen sobre todos (campo medio); la diferencia entre ambas curvas es el efecto de la estructura de la red.
+Esta regla es la versión en red del modelo de Bass. La gráfica muestra también la curva del **modelo agregado de Bass** con los mismos parámetros, que supone que todos influyen sobre todos; la diferencia entre ambas curvas es el efecto de la estructura de la red.
+
+## CASOS
+
+* **PS5 (tecnología)**: `p` = 0,0081 y `q` = 0,0375 mensuales, ajustados con la serie oficial de unidades de Sony (2020–2026) y expresados sobre la base instalada de PS4 (117 millones); potencial del 100 %, 2,5 % de innovadores y 72 meses.
+* **GTA 6 (innovación)**: `p` = 0,69 mensual (campaña de lanzamiento), `q` = 0,0375 (la imitación medida con la PS5), potencial del 21 % de los dueños de PS5, 7 % de compradores el primer día y 24 meses, por analogía con el primer año de GTA V (cifras de Take-Two).
+* **libre**: usa los deslizadores tal como estén.
+
+El caso se aplica al pulsar **configurar**; no cambia la red, la campaña ni su duración.
 
 ## ¿CÓMO SE USA?
 
-Pulse **configurar** para generar la red y **simular** para correr la simulación hasta `meses`. **avanzar un mes** ejecuta un solo paso.
+Elija el `caso`, pulse **configurar** para generar la red y **simular** para correr hasta `meses`. **avanzar un mes** ejecuta un solo paso.
 
-Colores: gris = aún no adopta; turquesa = adoptante; naranja = adoptó en el mes que acaba de terminar; gris oscuro = fuera del potencial de mercado. El tamaño del nodo crece con su número de vecinos.
+Colores: gris = aún no adopta; azul = adoptante; naranja = adoptó en el mes que acaba de terminar; gris oscuro = fuera del potencial de mercado. El tamaño del nodo crece con su número de vecinos.
 
 `semilla` distinta de 0 fija la semilla aleatoria para reproducir una corrida. `dibujar-red?` desactivado omite la disposición visual de la red (útil con poblaciones grandes o en BehaviorSpace).
 
-Los experimentos de la sección **Herramientas → BehaviorSpace** reproducen los escenarios del artículo: publicidad × densidad, topología × publicidad, duración de la campaña y calibración con datos reales.
+Los experimentos de **Herramientas → BehaviorSpace** reproducen los del artículo: calibración con la serie de PS5, publicidad × densidad, topología × publicidad y duración de la campaña, los tres últimos para ambos casos.
 
 ## COSAS PARA OBSERVAR
 
-* Sin campaña (`campaña?` apagado) la difusión depende por completo de los innovadores iniciales y de la densidad de la red: con `grado-promedio` bajo la innovación puede no despegar nunca.
-* Con campaña, la curva toma la forma de S característica de Bass; la publicidad "siembra" adoptantes en todas las partes de la red y la imitación hace el resto.
-* En redes libres de escala los nodos muy conectados (grandes) adoptan temprano y aceleran el despegue.
-* La curva del modelo agregado suele ir **por encima** de la del modelo en red: en una red real, los adoptantes se agrupan y la influencia social se desperdicia entre quienes ya adoptaron.
+* PS5: la curva tiene forma de S; la imitación pesa más que la publicidad (`q` > `p`).
+* GTA 6: casi todas las compras ocurren en el primer mes con campaña y luego caen (`p` > `q`), como en el lanzamiento de un éxito de taquilla.
+* Sin campaña, la difusión depende de los adoptantes iniciales y de la densidad de la red.
+* La curva del modelo agregado suele ir **por encima** de la del modelo en red: en una red, los adoptantes se agrupan y la influencia social se desperdicia entre quienes ya adoptaron.
 
 ## COSAS PARA PROBAR
 
-* Fije `campaña?` apagado y busque el `grado-promedio` mínimo a partir del cual la adopción final supera el 50 %.
-* Compare una campaña corta (`duracion-campaña` = 12) con una permanente: ¿cuánto se pierde en adopción final?
-* Con `potencial-mercado` = 89 %, `adoptantes-iniciales` = 0 y `meses` = 228, compare la curva con la serie real de smartphones (2007–2026).
+* Caso PS5 con `campaña?` apagado: ¿cuánto cambia la adopción final al pasar `grado-promedio` de 2 a 16?
+* Caso GTA 6 con `duracion-campaña` = 1: ¿qué parte del efecto de una campaña permanente se logra con un solo mes?
+* Caso libre con `potencial-mercado` = 100, `adoptantes-iniciales` = 0, `p-publicidad` = 0,0081, `q-imitacion` = 0,0375 y `meses` = 74: compare la curva con la serie real de la PS5.
 
 ## CRÉDITOS Y REFERENCIAS
 
@@ -629,6 +674,8 @@ Jesus Gregorio Delgado, David Andres Monroy Aguiar, Duvan Felipe Baquero Cerquer
 * Rand, W. y Rust, R. T. (2011). Agent-based modeling in marketing: guidelines for rigor. *International Journal of Research in Marketing*, 28(3), 181–193.
 * Rogers, E. M. (2003). *Diffusion of Innovations* (5.ª ed.). Free Press.
 * Wilensky, U. (1999). NetLogo. Center for Connected Learning and Computer-Based Modeling, Northwestern University.
+* Sony Interactive Entertainment. Business Data & Sales. https://www.sonyinteractive.com/en/our-company/business-data-sales/
+* Take-Two Interactive. Comunicados de resultados de los años fiscales 2014 y 2015 (ventas de Grand Theft Auto V).
 @#$#@#$#@
 default
 true
@@ -656,7 +703,7 @@ repeat 60 [ go ]
   <experiment name="publicidad_x_densidad" repetitions="30" sequentialRunOrder="false" runMetricsEveryStep="true">
     <setup>setup</setup>
     <go>go</go>
-    <timeLimit steps="120"/>
+    <timeLimit steps="72"/>
     <metric>porcentaje-adopcion</metric>
     <metric>nuevos</metric>
     <metric>mes-50</metric>
@@ -665,24 +712,20 @@ repeat 60 [ go ]
     <metric>grado-medio</metric>
     <metric>agrupamiento</metric>
     <metric>camino-medio</metric>
-    <enumeratedValueSet variable="poblacion"><value value="1000"/></enumeratedValueSet>
+    <enumeratedValueSet variable="caso"><value value="&quot;PS5 (tecnología)&quot;"/><value value="&quot;GTA 6 (innovación)&quot;"/></enumeratedValueSet>
     <enumeratedValueSet variable="tipo-red"><value value="&quot;mundo pequeño&quot;"/></enumeratedValueSet>
     <enumeratedValueSet variable="grado-promedio"><value value="2"/><value value="4"/><value value="6"/><value value="8"/><value value="12"/><value value="16"/></enumeratedValueSet>
-    <enumeratedValueSet variable="prob-reconexion"><value value="0.1"/></enumeratedValueSet>
-    <enumeratedValueSet variable="potencial-mercado"><value value="100"/></enumeratedValueSet>
-    <enumeratedValueSet variable="adoptantes-iniciales"><value value="2.5"/></enumeratedValueSet>
-    <enumeratedValueSet variable="q-imitacion"><value value="0.02"/><value value="0.032"/></enumeratedValueSet>
     <enumeratedValueSet variable="campaña?"><value value="false"/><value value="true"/></enumeratedValueSet>
-    <enumeratedValueSet variable="p-publicidad"><value value="0.0066"/></enumeratedValueSet>
-    <enumeratedValueSet variable="duracion-campaña"><value value="120"/></enumeratedValueSet>
-    <enumeratedValueSet variable="meses"><value value="120"/></enumeratedValueSet>
+    <enumeratedValueSet variable="duracion-campaña"><value value="240"/></enumeratedValueSet>
+    <enumeratedValueSet variable="poblacion"><value value="1000"/></enumeratedValueSet>
+    <enumeratedValueSet variable="prob-reconexion"><value value="0.1"/></enumeratedValueSet>
     <enumeratedValueSet variable="semilla"><value value="0"/></enumeratedValueSet>
     <enumeratedValueSet variable="dibujar-red?"><value value="false"/></enumeratedValueSet>
   </experiment>
   <experiment name="topologia_x_publicidad" repetitions="30" sequentialRunOrder="false" runMetricsEveryStep="true">
     <setup>setup</setup>
     <go>go</go>
-    <timeLimit steps="120"/>
+    <timeLimit steps="72"/>
     <metric>porcentaje-adopcion</metric>
     <metric>nuevos</metric>
     <metric>mes-50</metric>
@@ -691,64 +734,60 @@ repeat 60 [ go ]
     <metric>grado-medio</metric>
     <metric>agrupamiento</metric>
     <metric>camino-medio</metric>
-    <enumeratedValueSet variable="poblacion"><value value="1000"/></enumeratedValueSet>
+    <enumeratedValueSet variable="caso"><value value="&quot;PS5 (tecnología)&quot;"/><value value="&quot;GTA 6 (innovación)&quot;"/></enumeratedValueSet>
     <enumeratedValueSet variable="tipo-red"><value value="&quot;aleatoria&quot;"/><value value="&quot;mundo pequeño&quot;"/><value value="&quot;libre de escala&quot;"/></enumeratedValueSet>
-    <enumeratedValueSet variable="grado-promedio"><value value="6"/></enumeratedValueSet>
-    <enumeratedValueSet variable="prob-reconexion"><value value="0.1"/></enumeratedValueSet>
-    <enumeratedValueSet variable="potencial-mercado"><value value="100"/></enumeratedValueSet>
-    <enumeratedValueSet variable="adoptantes-iniciales"><value value="2.5"/></enumeratedValueSet>
-    <enumeratedValueSet variable="q-imitacion"><value value="0.02"/><value value="0.032"/></enumeratedValueSet>
+    <enumeratedValueSet variable="grado-promedio"><value value="16"/></enumeratedValueSet>
     <enumeratedValueSet variable="campaña?"><value value="false"/><value value="true"/></enumeratedValueSet>
-    <enumeratedValueSet variable="p-publicidad"><value value="0.0066"/></enumeratedValueSet>
-    <enumeratedValueSet variable="duracion-campaña"><value value="120"/></enumeratedValueSet>
-    <enumeratedValueSet variable="meses"><value value="120"/></enumeratedValueSet>
+    <enumeratedValueSet variable="duracion-campaña"><value value="240"/></enumeratedValueSet>
+    <enumeratedValueSet variable="poblacion"><value value="1000"/></enumeratedValueSet>
+    <enumeratedValueSet variable="prob-reconexion"><value value="0.1"/></enumeratedValueSet>
     <enumeratedValueSet variable="semilla"><value value="0"/></enumeratedValueSet>
     <enumeratedValueSet variable="dibujar-red?"><value value="false"/></enumeratedValueSet>
   </experiment>
   <experiment name="duracion_campana" repetitions="30" sequentialRunOrder="false" runMetricsEveryStep="true">
     <setup>setup</setup>
     <go>go</go>
-    <timeLimit steps="120"/>
+    <timeLimit steps="72"/>
     <metric>porcentaje-adopcion</metric>
     <metric>nuevos</metric>
     <metric>mes-50</metric>
     <metric>pico-nuevos</metric>
     <metric>mes-pico</metric>
-    <enumeratedValueSet variable="poblacion"><value value="1000"/></enumeratedValueSet>
+    <metric>grado-medio</metric>
+    <metric>agrupamiento</metric>
+    <metric>camino-medio</metric>
+    <enumeratedValueSet variable="caso"><value value="&quot;PS5 (tecnología)&quot;"/><value value="&quot;GTA 6 (innovación)&quot;"/></enumeratedValueSet>
     <enumeratedValueSet variable="tipo-red"><value value="&quot;mundo pequeño&quot;"/></enumeratedValueSet>
-    <enumeratedValueSet variable="grado-promedio"><value value="6"/></enumeratedValueSet>
-    <enumeratedValueSet variable="prob-reconexion"><value value="0.1"/></enumeratedValueSet>
-    <enumeratedValueSet variable="potencial-mercado"><value value="100"/></enumeratedValueSet>
-    <enumeratedValueSet variable="adoptantes-iniciales"><value value="2.5"/></enumeratedValueSet>
-    <enumeratedValueSet variable="q-imitacion"><value value="0.02"/><value value="0.032"/></enumeratedValueSet>
+    <enumeratedValueSet variable="grado-promedio"><value value="16"/></enumeratedValueSet>
     <enumeratedValueSet variable="campaña?"><value value="true"/></enumeratedValueSet>
-    <enumeratedValueSet variable="p-publicidad"><value value="0.0066"/></enumeratedValueSet>
-    <enumeratedValueSet variable="duracion-campaña"><value value="0"/><value value="6"/><value value="12"/><value value="24"/><value value="60"/><value value="120"/></enumeratedValueSet>
-    <enumeratedValueSet variable="meses"><value value="120"/></enumeratedValueSet>
+    <enumeratedValueSet variable="duracion-campaña"><value value="0"/><value value="1"/><value value="3"/><value value="6"/><value value="12"/><value value="24"/><value value="240"/></enumeratedValueSet>
+    <enumeratedValueSet variable="poblacion"><value value="1000"/></enumeratedValueSet>
+    <enumeratedValueSet variable="prob-reconexion"><value value="0.1"/></enumeratedValueSet>
     <enumeratedValueSet variable="semilla"><value value="0"/></enumeratedValueSet>
     <enumeratedValueSet variable="dibujar-red?"><value value="false"/></enumeratedValueSet>
   </experiment>
-  <experiment name="calibracion_pew" repetitions="30" sequentialRunOrder="false" runMetricsEveryStep="true">
+  <experiment name="calibracion_ps5" repetitions="30" sequentialRunOrder="false" runMetricsEveryStep="true">
     <setup>setup</setup>
     <go>go</go>
-    <timeLimit steps="228"/>
+    <timeLimit steps="74"/>
     <metric>porcentaje-adopcion</metric>
     <metric>nuevos</metric>
     <metric>porcentaje-bass</metric>
     <metric>grado-medio</metric>
     <metric>agrupamiento</metric>
     <metric>camino-medio</metric>
+    <enumeratedValueSet variable="caso"><value value="&quot;libre&quot;"/></enumeratedValueSet>
     <enumeratedValueSet variable="poblacion"><value value="1000"/></enumeratedValueSet>
     <enumeratedValueSet variable="tipo-red"><value value="&quot;aleatoria&quot;"/><value value="&quot;mundo pequeño&quot;"/><value value="&quot;libre de escala&quot;"/></enumeratedValueSet>
     <enumeratedValueSet variable="grado-promedio"><value value="4"/><value value="8"/><value value="16"/></enumeratedValueSet>
     <enumeratedValueSet variable="prob-reconexion"><value value="0.1"/></enumeratedValueSet>
-    <enumeratedValueSet variable="potencial-mercado"><value value="89"/></enumeratedValueSet>
+    <enumeratedValueSet variable="potencial-mercado"><value value="100"/></enumeratedValueSet>
     <enumeratedValueSet variable="adoptantes-iniciales"><value value="0"/></enumeratedValueSet>
-    <enumeratedValueSet variable="q-imitacion"><value value="0.0202"/></enumeratedValueSet>
+    <enumeratedValueSet variable="q-imitacion"><value value="0.0375"/></enumeratedValueSet>
     <enumeratedValueSet variable="campaña?"><value value="true"/></enumeratedValueSet>
-    <enumeratedValueSet variable="p-publicidad"><value value="0.0066"/></enumeratedValueSet>
+    <enumeratedValueSet variable="p-publicidad"><value value="0.0081"/></enumeratedValueSet>
     <enumeratedValueSet variable="duracion-campaña"><value value="240"/></enumeratedValueSet>
-    <enumeratedValueSet variable="meses"><value value="228"/></enumeratedValueSet>
+    <enumeratedValueSet variable="meses"><value value="74"/></enumeratedValueSet>
     <enumeratedValueSet variable="semilla"><value value="0"/></enumeratedValueSet>
     <enumeratedValueSet variable="dibujar-red?"><value value="false"/></enumeratedValueSet>
   </experiment>

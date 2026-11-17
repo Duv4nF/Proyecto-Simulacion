@@ -1,1 +1,2 @@
-Aquí quedan las tablas CSV de BehaviorSpace (ver modelo/correr_experimentos.sh).
+Tablas CSV de BehaviorSpace (NetLogo 7.0.4): calibracion_ps5, publicidad_x_densidad, topologia_x_publicidad y duracion_campana.
+Se generan con modelo/correr_experimentos.bat (Windows) o modelo/correr_experimentos.sh.

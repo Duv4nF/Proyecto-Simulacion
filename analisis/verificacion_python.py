@@ -1,16 +1,17 @@
-"""Implementación independiente (Python + networkx) de la misma regla de adopción
-del modelo NetLogo. Sirve para verificar que los resultados del ABM no dependen
-de la plataforma: con los mismos parámetros, ambas implementaciones deben dar
-curvas estadísticamente equivalentes.
+"""Implementación independiente (Python + networkx) de la misma regla de adopción del
+modelo NetLogo. La usan generar_resultados_python.py (réplica de los experimentos, para
+comparar ambas implementaciones) y sensibilidad.py.
 
-Uso:  python3 verificacion_python.py   (escribe datos/resultados/verificacion_python.csv)
+Ejecutado solo, hace la verificación analítica: con la red completa (todos conectados
+con todos) la regla debe recuperar en promedio la recursión mensual de Bass que NetLogo
+integra como referencia. Imprime la diferencia máxima para los casos PS5 y GTA 6.
+
+Uso:  python verificacion_python.py
 """
 from pathlib import Path
 
 import networkx as nx
 import numpy as np
-import pandas as pd
-import scipy.sparse as sp
 
 RAIZ = Path(__file__).resolve().parents[1]
 
@@ -31,8 +32,8 @@ def propiedades(g):
     return grado, agrup, camino
 
 
-def simular(tipo="mundo pequeño", n=1000, k=6, beta=0.1, potencial=100.0, iniciales=2.5,
-            p=0.0066, q=0.02, campana=True, duracion=120, meses=120, rng=None, grafo=None):
+def simular(tipo="mundo pequeño", n=1000, k=16, beta=0.1, potencial=100.0, iniciales=2.5,
+            p=0.0081, q=0.0375, campana=True, duracion=240, meses=72, rng=None, grafo=None):
     """Devuelve la curva de adopción (%) en cada mes, de 0 a `meses`, y los nuevos por mes."""
     rng = rng or np.random.default_rng()
     g = grafo if grafo is not None else crear_red(tipo, n, k, beta, rng)
@@ -56,20 +57,31 @@ def simular(tipo="mundo pequeño", n=1000, k=6, beta=0.1, potencial=100.0, inici
     return np.array(curva), np.array(nuevos_mes)
 
 
+def bass_mensual(F0, p, q, m, meses):
+    """La recursión de Bass que NetLogo integra como referencia (porcentaje-bass)."""
+    F = [F0]
+    for _ in range(meses):
+        F.append(F[-1] + (p + q * F[-1]) * (m - F[-1]))
+    return 100 * np.array(F)
+
+
 def main():
+    n = 1000
+    completa = nx.complete_graph(n)
+    casos = {"PS5": dict(p=0.0081, q=0.0375, potencial=100, iniciales=2.5, meses=72),
+             "GTA 6": dict(p=0.69, q=0.0375, potencial=21, iniciales=7, meses=24)}
     rng = np.random.default_rng(2026)
-    filas = []
-    for campana in (False, True):
-        for k in (2, 4, 6, 8, 12, 16):
-            for rep in range(30):
-                curva, _ = simular(k=k, campana=campana, rng=rng)
-                filas.append({"campaña": campana, "grado-promedio": k, "rep": rep,
-                              "adopcion_final": curva[-1], "adopcion_60": curva[60]})
-    res = pd.DataFrame(filas)
-    print(res.groupby(["campaña", "grado-promedio"])[["adopcion_final", "adopcion_60"]].agg(["mean", "std"]).round(1))
-    salida = RAIZ / "datos" / "resultados" / "verificacion_python.csv"
-    salida.parent.mkdir(parents=True, exist_ok=True)
-    res.to_csv(salida, index=False)
+    salida = {}
+    for nombre, c in casos.items():
+        curvas = [simular(n=n, grafo=completa, rng=rng, **c)[0] for _ in range(20)]
+        media = np.mean(curvas, axis=0)
+        bass = bass_mensual(media[0] / 100, c["p"], c["q"], c["potencial"] / 100, c["meses"])
+        salida[nombre] = {"diferencia_maxima_pp": float(np.abs(media - bass).max()), "final_agentes": float(media[-1]),
+                          "final_bass": float(bass[-1])}
+        print(f"{nombre}: red completa frente a Bass, diferencia máxima {np.abs(media - bass).max():.2f} puntos "
+              f"(final {media[-1]:.1f} % frente a {bass[-1]:.1f} %)")
+    import json
+    (RAIZ / "analisis" / "verificacion_bass.json").write_text(json.dumps(salida, indent=2, ensure_ascii=False), encoding="utf-8")
 
 
 if __name__ == "__main__":

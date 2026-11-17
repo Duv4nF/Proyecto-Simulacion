@@ -1,68 +1,68 @@
-\documentclass[tikz,border=4pt]{standalone}
-\usepackage[utf8]{inputenc}
-\usepackage[T1]{fontenc}
-\usepackage{helvet}
+% Esquema del sistema. Compilar con XeLaTeX (usa la fuente IBM Plex Sans de analisis/fuentes):
+%   xelatex esquema_sistema.tex
+% Ancho natural ~15 cm: incluido a \textwidth en LNCS queda a escala ~0,8 (texto de 6,5 a 7,5 pt).
+\documentclass[tikz,border=3pt]{standalone}
+\usepackage{fontspec}
+\setsansfont{IBMPlexSans}[Path=../../analisis/fuentes/, Extension=.ttf, UprightFont=*-Regular, BoldFont=*-SemiBold]
 \renewcommand{\familydefault}{\sfdefault}
+\hyphenpenalty=10000
+\exhyphenpenalty=10000
 \usetikzlibrary{arrows.meta,positioning,calc,fit,backgrounds}
 
-\definecolor{tinta}{HTML}{23313F}
-\definecolor{gris}{HTML}{8A97A3}
-\definecolor{claro}{HTML}{F3F5F7}
-\definecolor{acento}{HTML}{0E9C98}
-\definecolor{acentoclaro}{HTML}{DDF3F2}
-\definecolor{naranja}{HTML}{E0792B}
-\definecolor{naranjaclaro}{HTML}{FBE9DC}
+\definecolor{tinta}{HTML}{1F2933}
+\definecolor{gris}{HTML}{8C8A85}
+\definecolor{borde}{HTML}{B9B4AA}
+\definecolor{claro}{HTML}{F4F2ED}
+\definecolor{acento}{HTML}{1E66A8}
+\definecolor{acentoclaro}{HTML}{E4EDF6}
+\definecolor{terracota}{HTML}{C2502A}
+\definecolor{terracotaclaro}{HTML}{F7E6DE}
 
 \begin{document}
 \begin{tikzpicture}[
-  font=\small, text=tinta,
-  caja/.style={draw=gris, line width=0.5pt, rounded corners=3pt, fill=white,
-               align=center, inner sep=6pt, minimum height=12mm},
-  etapa/.style={caja, fill=claro, text width=27mm},
-  nucleo/.style={caja, fill=acentoclaro, draw=acento, line width=0.8pt},
-  flecha/.style={-{Latex[length=2.2mm]}, line width=0.7pt, draw=tinta},
+  font=\footnotesize, text=tinta,
+  caja/.style={draw=borde, line width=0.5pt, rounded corners=2pt, fill=white, align=center, inner sep=4pt, minimum height=11mm},
+  etapa/.style={caja, fill=claro, text width=23mm},
+  nucleo/.style={caja, fill=acentoclaro, draw=acento, line width=0.7pt},
+  flecha/.style={-{Latex[length=2mm]}, line width=0.7pt, draw=tinta},
   nota/.style={font=\scriptsize, text=gris, align=center},
 ]
 
 % ---------- fila superior: flujo de trabajo
-\node[etapa] (datos) at (0,0) {\textbf{Datos reales}\\[1pt]\footnotesize adopción de smartphones (Pew, 2011--2026)};
-\node[etapa] (calib) at (3.7,0) {\textbf{Calibración}\\[1pt]\footnotesize modelo de Bass por mínimos cuadrados};
-\node[etapa, fill=acentoclaro, draw=acento, line width=0.8pt, text width=33mm] (abm) at (7.7,0)
-  {\textbf{Modelo basado en agentes}\\[1pt]\footnotesize NetLogo 6.4 + extensión \texttt{nw}};
-\node[etapa] (exp) at (11.7,0) {\textbf{Experimentos}\\[1pt]\footnotesize BehaviorSpace: 4 diseños, 30 réplicas por escenario};
-\node[etapa] (ana) at (15.4,0) {\textbf{Análisis}\\[1pt]\footnotesize Python: adopción final, $T_{50}$, RMSE, MAPE};
+\node[etapa] (datos) at (0,0) {\textbf{\small Datos reales}\\ventas de PS5 (Sony) y de GTA\,V (Take-Two)};
+\node[etapa] (calib) at (3.1,0) {\textbf{\small Calibración}\\Bass (PS5) y analogía (GTA\,6)};
+\node[etapa, fill=acentoclaro, draw=acento, line width=0.7pt] (abm) at (6.2,0) {\textbf{\small Modelo de agentes}\\NetLogo 7 y nw; casos PS5 y GTA\,6};
+\node[etapa] (exp) at (9.3,0) {\textbf{\small Experimentos}\\BehaviorSpace: 4 diseños, 30 réplicas};
+\node[etapa] (ana) at (12.4,0) {\textbf{\small Análisis}\\Python: adopción final, RMSE, MAPE, IC};
 
 \draw[flecha] (datos) -- (calib);
-\draw[flecha] (calib) -- node[above=1pt, nota] {$p,\,q,\,m$} (abm);
+\draw[flecha] (calib) -- node[below=1pt, nota] {$p,q,m$} (abm);
 \draw[flecha] (abm) -- (exp);
 \draw[flecha] (exp) -- node[above=1pt, nota] {CSV} (ana);
-\draw[flecha, draw=gris, dashed] (datos.north) to[out=90, in=90, looseness=0.25]
-  node[above, nota, pos=0.5] {partición entrenamiento / validación / prueba: los datos de validación y prueba solo se usan para evaluar} (ana.north);
+\draw[flecha, draw=gris, dashed] (datos.north) to[out=90, in=90, looseness=0.22]
+  node[above, nota, pos=0.5] {PS5: entrenamiento ajusta $p$ y $q$; validación elige $m$ y la red; prueba solo evalúa} (ana.north);
 
 % ---------- interior del modelo
-\node[nucleo, text width=34mm] (red) at (3.3,-4.9)
-  {\textbf{Red social}\\[1pt]\footnotesize $N$ agentes, grado promedio $k$\\ aleatoria · mundo pequeño · libre de escala};
-\node[nucleo, text width=46mm] (regla) at (9.3,-4.9)
-  {\textbf{Regla de adopción (cada mes)}\\[3pt]
-   $P_i = 1-(1-p\,a_t)\,(1-q\,f_i)$\\[3pt]
-   \footnotesize $f_i$: fracción de vecinos de $i$ que ya adoptó\\ $i$ adopta si $u \sim U(0,1)$ es menor que $P_i$};
-\node[nucleo, text width=32mm] (estado) at (14.6,-4.9)
-  {\textbf{Estado del agente}\\[1pt]\footnotesize no adoptante $\rightarrow$ adoptante\\ irreversible; todos los cambios se aplican al cerrar el mes};
+\node[nucleo, text width=28mm] (red) at (1.6,-3.75)
+  {\textbf{\small Red social}\\$N$ agentes, grado $k$;\\aleatoria, mundo pequeño o libre de escala};
+\node[nucleo, text width=38mm] (regla) at (6.2,-3.75)
+  {\textbf{\small Regla de adopción (cada mes)}\\[2pt]$P_i = 1-(1-p\,a_t)(1-q\,f_i)$\\[2pt]$f_i$: fracción de vecinos que adoptó};
+\node[nucleo, text width=26mm] (estado) at (10.8,-3.75)
+  {\textbf{\small Estado del agente}\\no adoptante $\rightarrow$ adoptante; irreversible, al cerrar el mes};
+\node[caja, fill=terracotaclaro, draw=terracota, text width=38mm, minimum height=8mm] (campana) at (6.2,-1.9)
+  {\textbf{Campaña publicitaria} $p\,a_t$\\$a_t=1$ mientras está activa};
 
-\node[caja, fill=naranjaclaro, draw=naranja, text width=40mm, minimum height=9mm, font=\footnotesize] (campana) at (9.3,-2.55)
-  {\textbf{Campaña publicitaria}\quad $p\,a_t$\\ $a_t = 1$ mientras la campaña está activa, 0 después};
-
-\draw[flecha, draw=naranja] (campana) -- (regla);
+\draw[flecha, draw=terracota] (campana) -- (regla);
 \draw[flecha, draw=acento] (red) -- node[above=1pt, nota] {$f_i$} (regla);
 \draw[flecha] (regla) -- (estado);
-\draw[flecha, draw=gris, dashed] (estado.south) to[out=-90, in=-90, looseness=0.45]
-  node[below, nota] {los nuevos adoptantes elevan los $f_i$ de sus vecinos en el mes siguiente} (red.south);
+\draw[flecha, draw=gris, dashed] (estado.south) to[out=-90, in=-90, looseness=0.4]
+  node[below, nota] {los nuevos adoptantes elevan los $f_i$ de sus vecinos el mes siguiente} (red.south);
 
 \begin{scope}[on background layer]
-  \node[draw=acento, dashed, rounded corners=4pt, line width=0.5pt, fill=white,
-        fit=(red)(regla)(estado)(campana), inner xsep=4mm, inner ysep=3.5mm] (interior) {};
+  \node[draw=acento, dashed, rounded corners=3pt, line width=0.5pt, fill=white,
+        fit=(red)(regla)(estado)(campana), inner xsep=3mm, inner ysep=3mm] (interior) {};
 \end{scope}
-\node[font=\footnotesize\bfseries, text=acento, anchor=west] at ($(interior.north west)+(1.5mm,-2.8mm)$) {interior del modelo};
+\node[font=\scriptsize\bfseries, text=acento, anchor=west] at ($(interior.north west)+(1.2mm,-2.4mm)$) {interior del modelo};
 \draw[flecha, draw=acento, dashed] (abm.south) -- (interior.north -| abm.south);
 
 \end{tikzpicture}
