@@ -10,7 +10,7 @@ Modelo basado en agentes (NetLogo) de la difusión de innovaciones en una red so
 | `datos/` | `ps5_ventas_sie.csv` (unidades de PS5 por trimestre fiscal, Sony) y `gtav_ventas_taketwo.csv` (ventas de GTA V, Take-Two y Guinness). `resultados/` tiene las tablas de NetLogo; `resultados_python/`, las de la réplica en Python. |
 | `analisis/` | `datos_ps5.py` (serie, universo y partición), `calibracion_bass.py` (p, q, m de la PS5), `analogia_gtav.py` (parámetros de GTA 6), `analisis_resultados.py` (medidas, figuras, tablas y cifras), `figuras_diapositivas.py`, `verificacion_python.py` y `generar_resultados_python.py` (réplica independiente). `fuentes/` trae IBM Plex Sans (SIL OFL) para que las figuras salgan iguales en cualquier equipo. |
 | `articulo/` | `main.tex` + `referencias.bib` + `figuras/` + `tablas/` (formato LNCS, 8 páginas con referencias). `vista_previa_main.pdf` es una compilación local con la clase oficial `llncs`. |
-| `presentacion/` | `presentacion.pdf` (19 diapositivas), `presentacion_notas.pdf` (una página de notas del orador por diapositiva) y su fuente `presentacion.tex` (Beamer, XeLaTeX). |
+| `presentacion/` | `presentacion.pdf` (19 diapositivas), `presentacion_notas.pdf` (una página de notas del orador por diapositiva) y su fuente `presentacion.tex` (Beamer, XeLaTeX). `presentacion.pptx` es la misma presentación en PowerPoint, editable (texto, cajas, flechas y tabla nativos), con las notas del orador y las fuentes incrustadas; la genera `pptx/generar_pptx.py`. |
 | `sustentacion/` | `guion_sustentacion.md` (reparto, tiempos y texto por diapositiva) y `guia_estudio.html` (guía completa para estudiar; también está en Google Drive). Se generan con `rellenar.py` desde `plantillas/`. |
 
 ## Cómo abrir y usar el modelo
@@ -49,6 +49,15 @@ xelatex -jobname=presentacion_notas "\def\connotas{}\input{presentacion}"
 ```
 
 El esquema del sistema (`articulo/figuras/esquema_sistema.tex`) también se compila con XeLaTeX.
+
+Versión en PowerPoint (Windows, con PowerPoint y `pip install python-pptx fonttools`; instalar antes las fuentes de `analisis/fuentes` y `presentacion/pptx/fuentes`):
+
+```bash
+python presentacion/pptx/generar_pptx.py . presentacion/sin_fuentes.pptx
+powershell -File presentacion/pptx/incrustar.ps1 -entrada "$PWD/presentacion/sin_fuentes.pptx" -salida "$PWD/presentacion/presentacion.pptx"
+```
+
+El generador copia la posición de cada elemento del PDF de Beamer (texto, interlineado, kerning, fórmulas), así que si cambian las cifras o el texto hay que actualizarlo también en `generar_pptx.py`. `incrustar.ps1` guarda el archivo desde PowerPoint con las fuentes completas incrustadas.
 
 ## Cómo compilar el artículo en Overleaf
 
