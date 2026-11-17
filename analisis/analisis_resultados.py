@@ -190,19 +190,20 @@ def fig_escenarios(e1, r3):
     for eje, caso, letra in ((ejes[0], PS5, "(a)"), (ejes[1], GTA, "(b)")):
         _curvas_caso(eje, cur, caso, ks=(2, 16))
         horizonte = int(cur[cur["caso"] == caso]["mes"].max())
-        titulo_panel(eje, f"{letra} {CORTO[caso]}: adopción acumulada", fontsize=8)
+        titulo_panel(eje, f"{letra} {CORTO[caso]}", fontsize=8)
         eje.set_xlabel("meses desde el lanzamiento")
+        eje.set_ylabel("adopción acumulada (%)", fontsize=8)
         eje.set_xlim(0, horizonte)
         eje.set_xticks(range(0, horizonte + 1, 12 if horizonte > 30 else 6))
     ejes[0].set_ylim(0, 100)
     ejes[1].set_ylim(0, 25)
-    ejes[0].set_ylabel("adopción (% de la población)")
     ejes[0].legend(loc="upper left", handlelength=2.0, fontsize=6.6, labelspacing=0.3,
                    frameon=True, facecolor=PAPEL, edgecolor="none", framealpha=0.92)
     dibujar_fraccion(ejes[2], r3, ms=3.5)
-    titulo_panel(ejes[2], "(c) efecto de una campaña de $d$ meses\n(% del de una permanente)", fontsize=8)
+    titulo_panel(ejes[2], "(c) duración de la campaña", fontsize=8)
+    ejes[2].set_ylabel("% del efecto permanente", fontsize=8)
     ejes[2].legend(loc="lower right", fontsize=7)
-    fig.subplots_adjust(wspace=0.32)
+    fig.subplots_adjust(wspace=0.55)
     guardar(fig, "fig_escenarios")
 
 
@@ -320,7 +321,10 @@ def fig_calibracion(df, datos, parametros, seleccion, ancho=4.9, alto=1.95, diap
         b = limite if nombre == "prueba" else pd.Timestamp(b) + pd.Timedelta(days=45)
         if nombre != "entrenamiento":
             eje.axvspan(a, b, color=REJILLA, alpha=0.5, lw=0)
-        eje.text(a + (b - a) / 2, 98, dp.NOMBRE_PARTICION[nombre], ha="center", va="top", fontsize=7.5, color=SECUNDARIO)
+        if nombre == "prueba" and not diapositiva:  # alineada a la izquierda para no chocar con la anotación del control
+            eje.text(a + pd.Timedelta(days=20), 98, dp.NOMBRE_PARTICION[nombre], ha="left", va="top", fontsize=7.5, color=SECUNDARIO)
+        else:
+            eje.text(a + (b - a) / 2, 98, dp.NOMBRE_PARTICION[nombre], ha="center", va="top", fontsize=7.5, color=SECUNDARIO)
     fechas = pd.date_range(dp.LANZAMIENTO, limite, freq="7D")
     t = np.asarray((fechas - dp.LANZAMIENTO).days / 365.25)
     e = np.exp(-(p + q) * t)
@@ -330,7 +334,7 @@ def fig_calibracion(df, datos, parametros, seleccion, ancho=4.9, alto=1.95, diap
     x = dp.LANZAMIENTO + pd.to_timedelta(c["mes"] * dp.DIAS_MES, unit="D")
     eje.fill_between(x, c["media"] - c["ic"], c["media"] + c["ic"], color=AZUL, alpha=0.18, lw=0)
     red = NOMBRE_RED[seleccion['tipo-red']]
-    if diapositiva:  # etiqueta corta: la leyenda va dentro del eje, sobre la zona sin datos
+    if diapositiva:  # etiqueta corta: la leyenda va dentro del eje, en la zona sin datos
         red = red.replace("red de ", "").replace("red ", "")
     eje.plot(x, c["media"], color=AZUL, lw=1.8,
              label=f"{'agentes' if diapositiva else 'modelo de agentes'} ({red}, k = {seleccion['grado-promedio']})")
@@ -341,21 +345,23 @@ def fig_calibracion(df, datos, parametros, seleccion, ancho=4.9, alto=1.95, diap
                  label=f"Sony: {dp.NOMBRE_PARTICION[nombre]}")
     control = 100 * dp.CONTROL["minimo_M"] / dp.UNIVERSO_M
     eje.plot(dp.CONTROL["fecha"], control, marker="_", ms=10, mew=1.8, color=TERRACOTA, ls="none",
-             label="Sony: más de 100 M (10-nov-2026)" if diapositiva else None)
+             label="Sony: más de 100 M (nov. 2026)" if diapositiva else None)
     if not diapositiva:
-        eje.annotate("más de 100 M\n(10-nov-2026)", (dp.CONTROL["fecha"], control), xytext=(0, 7), textcoords="offset points",
-                     ha="center", va="bottom", fontsize=6.6, color=SECUNDARIO)
+        eje.annotate("más de 100 M\n(10-nov-2026)", (dp.CONTROL["fecha"], control), xytext=(14, 7), textcoords="offset points",
+                     ha="right", va="bottom", fontsize=6.6, color=SECUNDARIO)
     eje.set_xlim(dp.LANZAMIENTO, limite)
     eje.set_ylim(0, 100)
     eje.xaxis.set_major_locator(mdates.YearLocator())
     eje.xaxis.set_major_formatter(mdates.DateFormatter("%Y"))
     eje.set_ylabel(f"PS5 vendidas (% de la base\nde PS4: {coma(dp.UNIVERSO_M, 0)} millones)")
     if diapositiva:
-        eje.legend(loc="upper left", bbox_to_anchor=(0.0, 0.93), ncol=1, frameon=False, fontsize=6.3, handlelength=1.6,
+        # abajo a la derecha: bajo las curvas no hay datos desde 2024
+        eje.legend(loc="lower right", bbox_to_anchor=(1.0, 0.0), ncol=1, frameon=False, fontsize=6.3, handlelength=1.6,
                    labelspacing=0.25)
     else:
-        eje.legend(loc="lower right", ncol=1, framealpha=0.94, frameon=True,
-                   facecolor=PAPEL, edgecolor=REJILLA, fontsize=6.8)
+        # leyenda debajo del eje, en dos columnas: no tapa ningún dato
+        eje.legend(loc="upper center", bbox_to_anchor=(0.5, -0.2), ncol=2, frameon=False, fontsize=6.8,
+                   columnspacing=1.6, handlelength=1.8)
     guardar(fig, "fig_calibracion")
 
 

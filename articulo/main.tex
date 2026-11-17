@@ -1,7 +1,7 @@
 % Manuscrito en formato Springer LNCS.
 % Compilar con la clase oficial llncs (Overleaf: plantilla "Springer Lecture Notes in Computer Science").
 % Las cifras citadas en el texto se leen de tablas/cifras.tex, generado por analisis/analisis_resultados.py.
-\documentclass[runningheads]{llncs}
+\documentclass{llncs}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
@@ -22,6 +22,7 @@
 \setlength{\intextsep}{8pt plus 2pt minus 2pt}
 \renewcommand{\andname}{y}
 \renewcommand{\lastandname}{\unskip{} y}
+\raggedbottom
 
 \input{tablas/cifras}
 \renewcommand{\keywordname}{\textbf{Palabras clave:}}
@@ -30,30 +31,30 @@
 \begin{document}
 
 \title{Publicidad y redes sociales en la difusión de innovaciones: un modelo basado en agentes de la PS5 y del lanzamiento de GTA~6}
-\titlerunning{Publicidad y redes sociales en la difusión de innovaciones}
 
 \author{Jesus Gregorio Delgado \and David Andres Monroy Aguiar \and Duvan Felipe Baquero Cerquera}
-\authorrunning{J. G. Delgado et al.}
 
 \institute{Programa de Ingeniería de Sistemas, Facultad de Ciencias Básicas e Ingeniería,\\
 Universidad de los Llanos, Villavicencio, Colombia\\
-\email{\{jesus.delgado,david.monroy,duvan.baquero\}@unillanos.edu.co}}
+\email{\{jg.delgado,da.maguiar,df.baquero\}@unillanos.edu.co}}
 
 \maketitle
 
 \begin{abstract}
-La adopción de un producto nuevo depende de la publicidad y de quienes nos rodean. Este trabajo presenta un modelo basado en agentes, implementado en NetLogo, en el que cada agente de una red social adopta con una probabilidad que combina el efecto de una campaña publicitaria y la imitación de sus vecinos, según la versión en red del modelo de Bass. Se aplica a la consola PS5, como tecnología, y al videojuego GTA~6, como innovación que se difunde entre los dueños de la consola. La PS5 se calibró con la serie oficial de ventas de Sony (2020--2026), dividida cronológicamente en entrenamiento, validación y prueba; GTA~6, que sale el 19 de noviembre de 2026, se parametrizó por analogía con GTA~V. Con 30 réplicas por escenario se compararon la difusión sin publicidad y con campaña, redes de distinta densidad y topología y campañas de distinta duración, con el porcentaje de adopción al final del período como medida de desempeño. El modelo sigue la partición de prueba con un error de \cifraAbmRmsePru\ puntos porcentuales. Sin campaña, la PS5 no pasa del \cifraPsSinMaxGlobal\,\% en seis años en ninguna red, y con ella alcanza al menos el \cifraPsConMin\,\%; la densidad pesa mucho más, en términos relativos, sin publicidad. En GTA~6, un mes de campaña logra el \cifraFraccionGtaDUno\,\% del efecto de una permanente.
+La adopción de un producto nuevo depende de la publicidad y de las personas cercanas. Se presenta un modelo basado en agentes, implementado en NetLogo, en el que cada persona de una red social decide cada mes si adopta el producto, con una probabilidad que combina el efecto de una campaña publicitaria y la imitación de sus contactos (versión en red del modelo de Bass). Se aplica a dos casos: la consola PS5, como tecnología, y el videojuego GTA~6, como innovación que se difunde entre los dueños de la consola. La PS5 se calibró con la serie oficial de ventas de Sony (2020--2026), dividida en orden cronológico en entrenamiento, validación y prueba. GTA~6 sale el 19 de noviembre de 2026 y aún no tiene ventas, así que sus parámetros se tomaron por analogía con GTA~V. Con 30 réplicas por escenario se comparó la difusión con y sin publicidad, en redes de distinta densidad y topología y con campañas de distinta duración. La medida de desempeño es el porcentaje de adopción al final del período. En la partición de prueba el modelo tiene un error de \cifraAbmRmsePru\ puntos porcentuales. Sin campaña, la PS5 no pasa del \cifraPsSinMaxGlobal\,\% de adopción en seis años en ninguna red; con campaña llega al menos al \cifraPsConMin\,\%. La densidad de la red influye sobre todo cuando no hay publicidad. En GTA~6, un mes de campaña consigue el \cifraFraccionGtaDUno\,\% del efecto de una campaña permanente.
 
 \keywords{Difusión de innovaciones \and Modelo de Bass \and Simulación basada en agentes \and Redes sociales \and NetLogo.}
 \end{abstract}
 
 \section{Introducción}
 
-La PS5 acumuló \cifraPsUnidadesFin\ millones de unidades vendidas entre su lanzamiento, en noviembre de 2020, y septiembre de 2026~\cite{sony2026}, y sobre esa base sale GTA~6 el 19 de noviembre de 2026, solo para las consolas de esta generación y tras una campaña sin precedentes. Ambos productos muestran las dos fuerzas con las que Bass formalizó la difusión de innovaciones~\cite{bass1969}: una influencia externa (publicidad y medios), que actúa sobre todos por igual, y una influencia interna (imitación o ``voz a voz''), proporcional a cuántos ya adoptaron. Cuando domina la segunda aparece la curva en S que describió Rogers~\cite{rogers2003}; cuando domina la primera, las ventas se concentran en el lanzamiento y luego decaen, como en los grandes estrenos de entretenimiento.
+\textbf{Motivación.} La PS5 acumuló \cifraPsUnidadesFin\ millones de unidades vendidas entre su lanzamiento, en noviembre de 2020, y septiembre de 2026~\cite{sony2026}. Sobre esa base sale GTA~6 el 19 de noviembre de 2026, solo para las consolas de esta generación. Los dos productos ilustran las dos fuerzas con las que Bass explicó la difusión de innovaciones~\cite{bass1969}. La primera es la influencia externa (publicidad y medios), que llega a todos por igual. La segunda es la influencia interna (imitación o ``voz a voz''), que crece con el número de personas que ya adoptaron. Cuando domina la imitación aparece la curva en S que describió Rogers~\cite{rogers2003}, como en una consola. Cuando domina la publicidad, las ventas se concentran en el lanzamiento, como en un gran estreno.
 
-El modelo de Bass describe bien las curvas agregadas, pero supone una población perfectamente mezclada, cuando en la realidad la influencia viaja por una red social concreta. Quedan así sin respuesta preguntas que interesan a quien diseña un lanzamiento: ¿qué pasa si no hay publicidad?, ¿importa la densidad o la forma de la red?, ¿cuánto se pierde con una campaña corta? y ¿responden igual una consola y un videojuego? La simulación basada en agentes responde a ellas porque representa a cada individuo, su red y su regla de decisión, y permite ejecutar escenarios contrafactuales que no se observan en los datos~\cite{goldenberg2001}. Para que los escenarios sean creíbles, el modelo se calibra con datos reales y se evalúa con datos no usados en el ajuste; para un producto sin ventas, se toman los parámetros de uno análogo~\cite{thomas1985}.
+\textbf{Problema.} El modelo de Bass describe bien las curvas agregadas, pero supone que todas las personas influyen sobre todas. En la realidad la influencia viaja por una red social concreta. Por eso el modelo agregado no responde preguntas que interesan a quien planea un lanzamiento: ¿qué pasa si no hay publicidad?, ¿importa la densidad o la forma de la red?, ¿cuánto se pierde con una campaña corta?, ¿responden igual una consola y un videojuego?
 
-El objetivo es cuantificar con un modelo basado en agentes el efecto de la publicidad y de la red sobre el porcentaje de adopción al final del período, en una tecnología (PS5) y en una innovación de contenido (GTA~6). Para ello: (i) se implementa en NetLogo la versión en red del modelo de Bass con tres tipos de red; (ii) se calibra con la serie de la PS5 (entrenamiento, validación y prueba) y se parametriza GTA~6 por analogía con GTA~V; (iii) se evalúan con réplicas escenarios de publicidad, densidad, topología y duración de la campaña; y (iv) se verifica con una reimplementación independiente en Python.
+\textbf{Justificación.} La simulación basada en agentes permite responderlas porque representa a cada persona, sus contactos y su regla de decisión, y porque deja ejecutar escenarios que no se pueden observar en los datos, como un lanzamiento sin publicidad~\cite{goldenberg2001}. Para que esos escenarios sean creíbles, el modelo se calibra con datos reales y se evalúa con datos que no se usaron en el ajuste; para un producto sin ventas se toman los parámetros de uno análogo~\cite{thomas1985}.
+
+\textbf{Objetivo.} Medir con un modelo basado en agentes el efecto de la publicidad y de la red social sobre el porcentaje de adopción al final del período, en una tecnología (PS5) y en una innovación de contenido (GTA~6). Para lograrlo: (i) se implementa en NetLogo la versión en red del modelo de Bass con tres tipos de red; (ii) se calibra con la serie de la PS5 y se parametriza GTA~6 por analogía con GTA~V; (iii) se evalúan con réplicas escenarios de publicidad, densidad, topología y duración de la campaña; y (iv) se verifica el modelo con una segunda implementación en Python.
 
 \section{Metodología}
 \label{sec:metodologia}
@@ -65,58 +66,60 @@ El modelo agregado de Bass~\cite{bass1969} describe la fracción acumulada de ad
   \frac{dF}{dt} = \bigl(p + q\,F(t)\bigr)\bigl(m - F(t)\bigr),
   \label{eq:bass}
 \end{equation}
-donde $p$ es el coeficiente de innovación (influencia externa), $q$ el de imitación (influencia interna) y $m$ el potencial de mercado; $F$ se mide sobre toda la población (con $m=1$, es la forma usual). Si $q>p$ la curva tiene forma de S; si $p>q$, las ventas son máximas al inicio. La versión basada en agentes sustituye la mezcla perfecta por una red explícita~\cite{goldenberg2001}: en cada mes, un agente $i$ que aún no ha adoptado lo hace con probabilidad
+donde $p$ es el coeficiente de innovación (influencia externa), $q$ el de imitación (influencia interna) y $m$ el potencial de mercado, es decir, la fracción de la población que puede llegar a adoptar. Si $q>p$ la curva tiene forma de S; si $p>q$, las ventas son máximas al inicio.
+
+La versión basada en agentes sustituye la mezcla perfecta por una red explícita~\cite{goldenberg2001}. Cada mes, un agente $i$ que aún no ha adoptado lo hace con probabilidad
 \begin{equation}
   P_i(t) = 1 - \bigl(1 - p\,a_t\bigr)\bigl(1 - q\,f_i(t)\bigr),
   \label{eq:regla}
 \end{equation}
-donde $f_i(t)$ es la fracción de sus vecinos que ya adoptó y $a_t\in\{0,1\}$ indica si la campaña está activa. Si la red fuera completa, \eqref{eq:regla} recuperaría en promedio la dinámica de~\eqref{eq:bass}; la diferencia entre ambas curvas mide el efecto de la red.
+donde $f_i(t)$ es la fracción de sus vecinos que ya adoptó y $a_t\in\{0,1\}$ indica si la campaña está activa. Si la red fuera completa, la regla~\eqref{eq:regla} reproduciría en promedio la dinámica de~\eqref{eq:bass}. La diferencia entre ambas curvas mide entonces el efecto de la red.
 
-Los supuestos son: la adopción es irreversible; las decisiones de un mes se toman con el estado del inicio del mes y se aplican a la vez (actualización sincrónica); una fracción $m$ de agentes elegida al azar forma el potencial de mercado y el resto nunca adopta, pero sigue en la red y diluye la influencia que reciben sus vecinos; y la red es estática. Se usan tres redes con grado promedio $k$: la aleatoria de Erdős--Rényi, la de mundo pequeño de Watts--Strogatz~\cite{watts1998} (reconexión $\beta=0{,}1$, mucho agrupamiento) y la libre de escala de Barabási--Albert (pocos nodos muy conectados).
+Los supuestos son cuatro. La adopción es irreversible. Las decisiones de un mes se toman con el estado del inicio del mes y se aplican todas a la vez. Una fracción $m$ de los agentes, elegida al azar, forma el potencial de mercado; el resto nunca adopta, pero sigue en la red. Y la red no cambia en el tiempo. Se usan tres tipos de red con grado promedio $k$: la aleatoria de Erdős--Rényi, la de mundo pequeño de Watts--Strogatz~\cite{watts1998} (probabilidad de reconexión $\beta=0{,}1$), que tiene mucho agrupamiento, y la libre de escala de Barabási--Albert, que tiene pocos nodos muy conectados.
 
 \subsection{Esquema del sistema}
 
-La Figura~\ref{fig:esquema} resume el sistema: las series reales dan los parámetros, el modelo de agentes aplica mes a mes la regla~\eqref{eq:regla}, BehaviorSpace (la herramienta de NetLogo para barrer parámetros con réplicas) ejecuta los experimentos y Python analiza sus tablas.
+La Figura~\ref{fig:esquema} resume el sistema. Las series reales dan los parámetros y el modelo de agentes aplica cada mes la regla~\eqref{eq:regla}. BehaviorSpace, la herramienta de NetLogo para repetir corridas con distintos parámetros, ejecuta los experimentos, y Python calcula las medidas con las tablas que exporta.
 
 \begin{figure}[htb]
   \centering
-  \includegraphics[width=0.94\textwidth]{esquema_sistema.pdf}
-  \caption{Esquema del sistema. Arriba, el flujo de trabajo; abajo, el interior del modelo: la red provee la fracción de vecinos adoptantes $f_i$, la campaña la señal $a_t$, y la regla decide el cambio de estado de cada agente.}
+  \includegraphics[width=0.88\textwidth]{esquema_sistema.pdf}
+  \caption{Esquema del sistema. Arriba, el flujo de trabajo. Abajo, el interior del modelo: la red entrega la fracción de vecinos adoptantes $f_i$, la campaña entrega la señal $a_t$ y la regla decide si el agente cambia de estado.}
   \label{fig:esquema}
 \end{figure}
 
 \subsection{Implementación}
 
-El modelo se implementó en NetLogo~\cite{wilensky1999} con la extensión \texttt{nw}, que genera las redes y mide sus propiedades. \texttt{setup} carga los parámetros del caso elegido (PS5, GTA~6 o libre), crea la red, marca el potencial de mercado y siembra los adoptantes iniciales; \texttt{go} ejecuta un mes en dos fases, \texttt{decidir} (cada no adoptante calcula $f_i$ y sortea su decisión) y \texttt{actualizar} (aplica las decisiones a la vez, registra las medidas e integra~\eqref{eq:bass} como referencia).
+El modelo se implementó en NetLogo~\cite{wilensky1999} con la extensión \texttt{nw}, que genera las redes y mide sus propiedades. \texttt{setup} carga los parámetros del caso elegido (PS5, GTA~6 o libre), crea la red, marca el potencial de mercado y siembra los adoptantes iniciales. \texttt{go} ejecuta un mes en dos pasos: en \texttt{decidir}, cada agente que no ha adoptado calcula $f_i$ y sortea su decisión; en \texttt{actualizar} se aplican todas las decisiones, se registran las medidas y se calcula la curva de~\eqref{eq:bass} como referencia.
 
 \subsection{Calibración y analogía}
 \label{sec:calibracion}
 
-\textbf{PS5.} Los parámetros de~\eqref{eq:bass} se estimaron por mínimos cuadrados no lineales en la partición de entrenamiento, con $t=0$ en el lanzamiento (12 de noviembre de 2020). Como el potencial $m$ no es identificable desde la fase de crecimiento (el ajuste libre lo lleva a la cota superior), se trató como hiperparámetro: para cada $m$ de una rejilla entre 0,80 y 1,00 se estimaron $p$ y $q$ y se eligió el de menor error en validación; como ese error bajó hasta el tope (la base de la PS4), $m=1$ es un supuesto conservador. Los coeficientes anuales se pasaron a tasas mensuales ($p/12$, $q/12$).
+\textbf{PS5.} Los parámetros de~\eqref{eq:bass} se estimaron por mínimos cuadrados no lineales con la partición de entrenamiento, tomando $t=0$ en el lanzamiento (12 de noviembre de 2020). El potencial $m$ no se puede estimar bien cuando la serie aún está creciendo, así que se trató como hiperparámetro: para cada valor de $m$ entre 0,80 y 1,00 se estimaron $p$ y $q$, y se eligió el $m$ con menor error en validación. El error bajó hasta el tope de la rejilla, de modo que se usó $m=1$ (toda la base de la PS4). Los coeficientes anuales se pasaron a tasas mensuales ($p/12$ y $q/12$).
 
-\textbf{GTA~6.} Sin ventas propias, se parametrizó por analogía~\cite{thomas1985} con GTA~V, lanzado en 2013 para PS3 y Xbox 360 (\cifraGtaBase\ millones de consolas instaladas). Sus ventas oficiales llegaron a \cifraGtavSeisSemanas\ millones a las seis semanas y se estabilizaron en \cifraGtavMeseta\ millones al año~\cite{taketwo2014}, el \cifraGtavMesetaPct\,\% de la base. Con la recursión mensual de~\eqref{eq:bass}, $m$ igual a esa meseta, $q$ igual al de la PS5 y 11,2 millones de compradores el primer día\footnote{Guinness World Records (2013), con datos de Rockstar; Take-Two no publicó esa cifra.}, el ajuste da $p=\cifraGtaP$ mensual (error de \cifraGtaRmse\ puntos): con $q$ fijado, el salto del lanzamiento se atribuye a la influencia externa ($p\approx\cifraGtaRazonPQ\,q$), al revés que en la PS5. GTA~6 se modela sobre los dueños de PS5 con $m=\cifraGtaM$\,\%, \cifraGtaIniciales\,\% de compradores el primer día y esos $p$ y $q$.
+\textbf{GTA~6.} Como no tiene ventas, se parametrizó por analogía~\cite{thomas1985} con GTA~V, que salió en 2013 para PS3 y Xbox 360 (\cifraGtaBase\ millones de consolas instaladas). GTA~V vendió 11,2 millones de copias el primer día, según el récord que registró Guinness World Records, \cifraGtavSeisSemanas\ millones a las seis semanas y \cifraGtavMeseta\ millones al año~\cite{taketwo2014}, que equivalen al \cifraGtavMesetaPct\,\% de la base. Se fijó $m$ en ese porcentaje, se tomaron los compradores del primer día como adoptantes iniciales, se usó el mismo $q$ de la PS5 y se ajustó $p$. El resultado es $p=\cifraGtaP$ mensual, con un error de \cifraGtaRmse\ puntos. En este caso la publicidad pesa unas \cifraGtaRazonPQ\ veces más que la imitación, al contrario que en la PS5. GTA~6 se modela sobre los dueños de PS5 con $m=\cifraGtaM$\,\%, \cifraGtaIniciales\,\% de compradores el primer día y esos mismos $p$ y $q$.
 
 \section{Conjunto de datos}
 \label{sec:datos}
 
-\textbf{Serie real.} La serie principal son las unidades de PS5 vendidas a tiendas que Sony Interactive Entertainment publica por trimestre fiscal~\cite{sony2026}: \cifraTrimestres\ trimestres, desde el de lanzamiento (diciembre de 2020) hasta septiembre de 2026, que van de \cifraPsUnidadesIni\ a \cifraPsUnidadesFin\ millones acumulados. El porcentaje de adopción se expresa sobre la base instalada de la generación anterior, la PS4, con más de \cifraUniverso\ millones de unidades según la misma fuente; ese universo se fijó antes de ver la partición de prueba. La Tabla~\ref{tab:datos} muestra ejemplos. La serie de GTA~V tiene cinco valores acumulados entre septiembre de 2013 y agosto de 2014 (\cifraGtavSerie\ millones): el primero, de Guinness, y los demás, de Take-Two.
+\textbf{Serie real.} La serie principal son las unidades de PS5 vendidas a tiendas que Sony Interactive Entertainment publica cada trimestre fiscal~\cite{sony2026}. Tiene \cifraTrimestres\ trimestres, desde el del lanzamiento (diciembre de 2020) hasta septiembre de 2026, y va de \cifraPsUnidadesIni\ a \cifraPsUnidadesFin\ millones acumulados. El porcentaje de adopción se calcula sobre la base instalada de la generación anterior, la PS4, que según la misma fuente supera los \cifraUniverso\ millones de unidades. Ese universo se fijó antes de mirar la partición de prueba. La Tabla~\ref{tab:datos} muestra algunos ejemplos. La serie de GTA~V tiene cinco valores acumulados entre septiembre de 2013 y agosto de 2014 (\cifraGtavSerie\ millones); el primero es el de Guinness y los demás son de Take-Two.
 
 \input{tablas/tabla_datos}
 
-\textbf{Datos simulados.} Cada experimento exporta una fila por corrida y mes con los parámetros y las medidas: \cifraCorridas\ corridas de 1000 agentes y \cifraFilas\ filas en CSV.
+\textbf{Datos simulados.} Cada experimento exporta una fila por corrida y por mes, con los parámetros y las medidas. En total son \cifraCorridas\ corridas de 1000 agentes y \cifraFilas\ filas en archivos CSV.
 
 \section{Diseño experimental}
 \label{sec:diseno}
 
-\textbf{Partición.} La serie de la PS5 se dividió cronológicamente en entrenamiento, de diciembre de 2020 a diciembre de 2023 (\cifraObsEnt\ trimestres), con el que se estiman $p$ y $q$; validación, de marzo a diciembre de 2024 (\cifraObsVal\ trimestres), con el que se eligen $m$ y la estructura de red; y prueba, de marzo de 2025 a septiembre de 2026 (\cifraObsPru\ trimestres), que no interviene en ninguna decisión. Como control adicional se usa el dato de Sony posterior a la serie: más de 100 millones al 10 de noviembre de 2026 (\cifraControlReal\,\% de la base).
+\textbf{Partición.} La serie de la PS5 se dividió en orden cronológico. El entrenamiento va de diciembre de 2020 a diciembre de 2023 (\cifraObsEnt\ trimestres) y sirve para estimar $p$ y $q$. La validación va de marzo a diciembre de 2024 (\cifraObsVal\ trimestres) y sirve para elegir $m$ y la estructura de la red. La prueba va de marzo de 2025 a septiembre de 2026 (\cifraObsPru\ trimestres) y no interviene en ninguna decisión. Como control adicional se usa un dato de Sony posterior a la serie: más de 100 millones de unidades al 10 de noviembre de 2026 (\cifraControlReal\,\% de la base).
 
-\textbf{Medidas de desempeño.} La principal es el \emph{porcentaje de adopción al final del período}: la fracción de la población que ha adoptado a los \cifraHorizontePs\ meses del lanzamiento en la PS5 y a los \cifraHorizonteGta\ en GTA~6. Se reportan además el mes del 50\,\% y el del pico de adoptantes nuevos. Frente a la serie real, por partición, se usan la raíz del error cuadrático medio (RMSE, en puntos porcentuales) y el error porcentual absoluto medio (MAPE) entre la curva simulada promedio y el valor observado al cierre de cada trimestre. Con 30 réplicas por escenario se reportan medias e intervalos de confianza del 95\,\% ($t$ de Student), que recogen la variabilidad entre réplicas, no la incertidumbre de $p$, $q$ y $m$.
+\textbf{Medidas de desempeño.} La principal es el \emph{porcentaje de adopción al final del período}: la fracción de la población que ha adoptado a los \cifraHorizontePs\ meses del lanzamiento en la PS5 y a los \cifraHorizonteGta\ meses en GTA~6. También se reportan el mes en que se alcanza el 50\,\% y el mes con más adoptantes nuevos. Para comparar con la serie real se usan, en cada partición, la raíz del error cuadrático medio (RMSE, en puntos porcentuales) y el error porcentual absoluto medio (MAPE) entre la curva simulada promedio y el valor observado al cierre de cada trimestre. Cada escenario se repite 30 veces y se reportan la media y el intervalo de confianza del 95\,\% ($t$ de Student). El intervalo recoge la variación entre réplicas, no la incertidumbre de $p$, $q$ y $m$.
 
-\textbf{Escenarios.} La Tabla~\ref{tab:experimentos} resume los cuatro experimentos. E1 a E3 se corren para ambos casos con $N=1000$ y la red de mundo pequeño con $k=16$, la elegida en validación, salvo en el factor que varía. En la PS5 se siembra un 2,5\,\% de adoptantes iniciales (la categoría de innovadores de Rogers~\cite{rogers2003}) para que el escenario sin campaña pueda arrancar; en GTA~6, los compradores del primer día. Sin campaña, $p=0$ desde el lanzamiento: se suprime toda influencia externa, así que la diferencia entre escenarios es una cota superior del efecto de la publicidad.
+\textbf{Escenarios.} La Tabla~\ref{tab:experimentos} resume los cuatro experimentos. E1, E2 y E3 se corren para los dos casos con $N=1000$ agentes y la red de mundo pequeño con $k=16$, que fue la elegida en validación, salvo en el factor que cambia. En la PS5 se siembra un 2,5\,\% de adoptantes iniciales (los innovadores de Rogers~\cite{rogers2003}) para que el escenario sin campaña pueda arrancar; en GTA~6 se siembran los compradores del primer día. En los escenarios sin campaña, $p=0$ desde el lanzamiento. Esto elimina toda la influencia externa, así que la diferencia con el escenario con campaña es una cota superior del efecto de la publicidad.
 
 \begin{table}[htb]
   \centering
-  \caption{Experimentos (30 réplicas por combinación); E1 a E3, para PS5 y GTA~6.}
+  \caption{Experimentos (30 réplicas por combinación). E1, E2 y E3 se corren para PS5 y GTA~6.}
   \label{tab:experimentos}
   \footnotesize
   \setlength{\tabcolsep}{4pt}
@@ -132,47 +135,55 @@ El modelo se implementó en NetLogo~\cite{wilensky1999} con la extensión \textt
   \end{tabular}
 \end{table}
 
-\textbf{Verificación.} La regla se reimplementó en Python con \texttt{networkx} y se repitieron los cuatro experimentos. En los \cifraVerifEscenarios\ escenarios, la adopción final media difiere en \cifraVerifDifMedia\ puntos en promedio (\cifraVerifDifMax\ como máximo); con la prueba $t$ de Welch, \cifraVerifSignif\ difieren sin corregir, lo esperable por azar, y con la corrección de Holm \cifraVerifHolm. Con la red completa, la regla recupera la recursión de Bass (diferencia máxima de \cifraVerifBassMax\ puntos).
+\textbf{Verificación.} La regla se programó por segunda vez en Python con \texttt{networkx} y se repitieron los cuatro experimentos. En los \cifraVerifEscenarios\ escenarios, la adopción final media de las dos implementaciones difiere en \cifraVerifDifMedia\ puntos en promedio y en \cifraVerifDifMax\ puntos como máximo. Con la prueba $t$ de Welch y la corrección de Holm, \cifraVerifHolm. Además, con una red completa la regla reproduce la curva de Bass (diferencia máxima de \cifraVerifBassMax\ puntos).
 
 \section{Resultados}
 \label{sec:resultados}
 
 \subsection{Calibración y validación con la PS5}
 
-El ajuste en entrenamiento dio $p=\cifraBassP$ y $q=\cifraBassQ$ anuales, con $m=\cifraBassM$\,\% (tope de la rejilla): la imitación pesa \cifraBassRazonQP\ veces más que la publicidad. Con los mismos coeficientes, en las redes la difusión es más lenta que en el modelo agregado, porque parte de la influencia de cada adoptante recae sobre vecinos que ya adoptaron; las nueve estructuras quedan por debajo de la serie y el error baja con $k$ (Tabla~\ref{tab:calibracion}). La validación eligió la \cifraAbmSelRedNombre\ con $k=\cifraAbmSelK$ (\cifraAbmRmseVal\ puntos, frente a \cifraAbmSegundaRmseVal\ de la \cifraAbmSegundaRedNombre\ con $k=\cifraAbmSegundaK$, una diferencia pequeña frente a la variabilidad entre réplicas). Su error en prueba es de \cifraAbmRmsePru\ puntos (MAPE \cifraAbmMapePru\,\%), mayor que el \cifraBassRmsePru\ del modelo agregado. Ambos quedan por debajo del control de noviembre de 2026 (\cifraControlAbm\,\% y \cifraControlBass\,\% frente a más de \cifraControlReal\,\%; Figura~\ref{fig:calibracion}): el ajuste con toda la serie sugiere que la PS5 superará la base de la PS4 (unos \cifraBassMLibreM\ millones).
+El ajuste en entrenamiento dio $p=\cifraBassP$ y $q=\cifraBassQ$ anuales, con $m=\cifraBassM$\,\%. La imitación pesa \cifraBassRazonQP\ veces más que la publicidad, lo que explica la forma de S de la serie. Con esos mismos coeficientes, el modelo de agentes difunde más despacio que el modelo agregado, porque parte de la influencia de cada adoptante recae en vecinos que ya adoptaron. Por eso las nueve redes probadas quedan por debajo de la serie real, y el error disminuye cuando aumenta $k$ (Tabla~\ref{tab:calibracion}).
+
+En validación se eligió la \cifraAbmSelRedNombre\ con $k=\cifraAbmSelK$, con un error de \cifraAbmRmseVal\ puntos. La \cifraAbmSegundaRedNombre\ con $k=\cifraAbmSegundaK$ quedó muy cerca (\cifraAbmSegundaRmseVal\ puntos), así que la diferencia entre las dos no es concluyente. En la partición de prueba el modelo de agentes tiene un error de \cifraAbmRmsePru\ puntos (MAPE de \cifraAbmMapePru\,\%), mayor que el del modelo agregado (\cifraBassRmsePru\ puntos). Los dos modelos quedan también por debajo del dato de control de noviembre de 2026: \cifraControlAbm\,\% y \cifraControlBass\,\%, frente a más de \cifraControlReal\,\% (Figura~\ref{fig:calibracion}). Esto indica que $m=1$ se queda corto: un ajuste con toda la serie sugiere que la PS5 llegará a unos \cifraBassMLibreM\ millones.
 
 \input{tablas/tabla_calibracion}
 
 \begin{figure}[htb]
   \centering
-  \includegraphics[width=0.8\textwidth]{fig_calibracion.pdf}
-  \caption{Serie de la PS5 por partición, curva de Bass ajustada y curva media (banda: IC 95\,\%) del modelo de agentes con la estructura elegida en validación. El trazo horizontal marca el control de Sony del 10 de noviembre de 2026.}
+  \includegraphics[width=0.72\textwidth]{fig_calibracion.pdf}
+  \caption{Serie de la PS5 por partición, curva de Bass ajustada y curva media del modelo de agentes con la red elegida en validación (banda: IC 95\,\%). El trazo horizontal marca el dato de control de Sony del 10 de noviembre de 2026.}
   \label{fig:calibracion}
 \end{figure}
 
 \subsection{Publicidad y densidad de la red}
 
-La Figura~\ref{fig:escenarios}(a, b) muestra las curvas de E1 para la red más dispersa y la más densa. En la PS5, sin publicidad la adopción a seis años va del \cifraPsSinKDos\,\% con $k=2$ al \cifraPsSinKDieciseis\,\% con $k=16$ y nunca alcanza el 50\,\%; con campaña la curva toma forma de S, cruza el 50\,\% hacia el mes \cifraTcincuentaPsConKDieciseis\ con $k=16$ y alcanza entre el \cifraPsConMin\,\% y el \cifraPsConMax\,\%. La densidad pesa mucho más, en términos relativos, sin publicidad: pasar de $k=2$ a $k=16$ multiplica la adopción por \cifraPsSinRazon\ (+\cifraPsSinGanancia\ puntos), porque con más contactos la influencia sale antes de los grupos locales; con campaña, solo por \cifraPsConRazon\ (+\cifraPsConGanancia\ puntos), porque la publicidad siembra adoptantes en toda la red. El nivel sin campaña depende de la semilla inicial (\cifraSensSemillaUnoSin\,\% con un 1\,\% de innovadores y \cifraSensSemillaCincoSin\,\% con un 5\,\%), pero sigue lejos del que da la campaña. En GTA~6 la campaña lo decide todo: con ella se alcanza el potencial (entre \cifraGtaConMin\,\% y \cifraGtaConMax\,\%) con el pico de compras en el mes \cifraMesPicoGtaConKDieciseis; sin ella, la adopción apenas pasa de los compradores del primer día (\cifraGtaSinMin\,\% a \cifraGtaSinMax\,\%), cualquiera que sea la densidad.
+La Figura~\ref{fig:escenarios}(a, b) muestra las curvas de E1 para la red más dispersa y la más densa. En la PS5, sin publicidad la adopción a seis años va del \cifraPsSinKDos\,\% con $k=2$ al \cifraPsSinKDieciseis\,\% con $k=16$, y nunca alcanza el 50\,\%. Con campaña la curva toma forma de S, cruza el 50\,\% hacia el mes \cifraTcincuentaPsConKDieciseis\ con $k=16$ y termina entre el \cifraPsConMin\,\% y el \cifraPsConMax\,\%.
+
+La densidad importa más cuando no hay publicidad. Sin campaña, pasar de $k=2$ a $k=16$ multiplica la adopción por \cifraPsSinRazon\ (\cifraPsSinGanancia\ puntos más), porque con más contactos la influencia sale antes de los grupos locales. Con campaña, el mismo cambio solo la multiplica por \cifraPsConRazon\ (\cifraPsConGanancia\ puntos más), porque la publicidad ya reparte adoptantes por toda la red.
+
+En GTA~6 la campaña decide el resultado. Con ella se alcanza el potencial (entre \cifraGtaConMin\,\% y \cifraGtaConMax\,\%) y el mes con más compras es el \cifraMesPicoGtaConKDieciseis. Sin ella, la adopción apenas supera a los compradores del primer día (\cifraGtaSinMin\,\% a \cifraGtaSinMax\,\%), sin importar la densidad.
 
 \begin{figure}[htb]
   \centering
   \includegraphics[width=\textwidth]{fig_escenarios.pdf}
-  \caption{(a, b) Curvas medias de adopción (banda: IC 95\,\%) con y sin campaña en redes de mundo pequeño con $k=2$ y $k=16$, para la PS5 (a) y GTA~6 (b). (c) Efecto de una campaña de $d$ meses como porcentaje del de una permanente, $(A_d-A_0)/(A_{\text{perm}}-A_0)$; los valores sobre 100\,\% son variación entre réplicas.}
+  \caption{(a, b) Curvas medias de adopción con y sin campaña en redes de mundo pequeño con $k=2$ y $k=16$, para la PS5 (a) y GTA~6 (b); la banda es el IC 95\,\%. (c) Efecto de una campaña de $d$ meses como porcentaje del efecto de una campaña permanente, $(A_d-A_0)/(A_{\text{perm}}-A_0)$. Los valores por encima de 100\,\% se deben a la variación entre réplicas.}
   \label{fig:escenarios}
 \end{figure}
 
 \subsection{Topología de la red}
 
-En E2 las tres topologías tienen $k=16$, pero la de mundo pequeño tiene mucho más agrupamiento ($C=\cifraEstMundoC$ frente a \cifraEstAleatoriaC\ en la aleatoria y \cifraEstEscalaC\ en la libre de escala). Con campaña las tres convergen (PS5: \cifraTopoPsConMin\,\% a \cifraTopoPsConMax\,\%). Sin campaña, en la PS5 la de mundo pequeño es la más lenta (\cifraTopoPsSinMundo\,\% frente a \cifraTopoPsSinAleatoria\,\% en la aleatoria y \cifraTopoPsSinEscala\,\% en la libre de escala), porque la influencia se queda en grupos ya convencidos; la libre de escala es la más variable (desviación estándar de \cifraTopoPsSinEscalaDe\ puntos, frente a \cifraTopoPsSinAleatoriaDe\ y \cifraTopoPsSinMundoDe), porque depende de si un nodo muy conectado adopta temprano. En GTA~6 la topología no cambia el resultado.
+En E2 las tres topologías tienen $k=16$, pero la de mundo pequeño tiene mucho más agrupamiento: $C=\cifraEstMundoC$, frente a \cifraEstAleatoriaC\ en la aleatoria y \cifraEstEscalaC\ en la libre de escala. Con campaña, las tres dan casi el mismo resultado en la PS5 (\cifraTopoPsConMin\,\% a \cifraTopoPsConMax\,\%). Sin campaña, la de mundo pequeño es la más lenta: \cifraTopoPsSinMundo\,\%, frente a \cifraTopoPsSinAleatoria\,\% en la aleatoria y \cifraTopoPsSinEscala\,\% en la libre de escala. La razón es que la influencia se queda dentro de grupos que ya adoptaron. La libre de escala es la más variable (desviación estándar de \cifraTopoPsSinEscalaDe\ puntos, frente a \cifraTopoPsSinAleatoriaDe\ y \cifraTopoPsSinMundoDe), porque su resultado depende de que un nodo muy conectado adopte pronto. En GTA~6 la topología no cambia el resultado.
 
 \subsection{Duración de la campaña}
 
-E3 interrumpe la campaña después de un número dado de meses (Figura~\ref{fig:escenarios}(c)). En GTA~6, un mes de campaña logra el \cifraFraccionGtaDUno\,\% del efecto de una permanente y tres meses el \cifraFraccionGtaDTres\,\%: el lanzamiento concentra casi todo. En la PS5 el rendimiento es gradual: un año de campaña logra el \cifraFraccionPsDDoce\,\% del efecto y dos años el \cifraFraccionPsDVeinticuatro\,\% (\cifraDurPsDVeinticuatro\,\% de adopción frente a \cifraDurPsDPermanente\,\%), porque la imitación necesita tiempo para sostener la difusión.
+En E3 la campaña se interrumpe después de cierto número de meses (Figura~\ref{fig:escenarios}(c)). En GTA~6, un mes de campaña consigue el \cifraFraccionGtaDUno\,\% del efecto de una campaña permanente y tres meses el \cifraFraccionGtaDTres\,\%: casi todo se decide en el lanzamiento. En la PS5 el efecto se acumula poco a poco. Un año de campaña consigue el \cifraFraccionPsDDoce\,\% del efecto y dos años el \cifraFraccionPsDVeinticuatro\,\% (\cifraDurPsDVeinticuatro\,\% de adopción, frente a \cifraDurPsDPermanente\,\% con campaña permanente), porque la imitación necesita tiempo para sostener la difusión.
 
 \section{Conclusiones}
 \label{sec:conclusiones}
 
-El modelo sigue la partición de prueba de la PS5 con un error de \cifraAbmRmsePru\ puntos y permite evaluar escenarios contrafactuales. Primero, en una tecnología que se difunde por imitación, como la PS5, la publicidad es la condición del despegue (como máximo \cifraPsSinMaxGlobal\,\% sin campaña en cualquiera de las redes, frente a al menos \cifraPsConMin\,\% con ella) y su efecto se acumula con los meses. Segundo, en un lanzamiento dominado por la influencia externa, como GTA~6, el primer mes de campaña decide el resultado y la red casi no importa. Tercero, la densidad de la red pesa mucho más, en términos relativos, sin publicidad, y la topología solo importa sin ella. Las limitaciones son los coeficientes homogéneos, la red estática, que las unidades vendidas a tiendas no equivalen a compradores y que los parámetros de GTA~6 son hipotéticos (con su potencial y sus compradores del primer día duplicados, el modelo da \cifraSensDobleSin\,\% sin campaña y \cifraSensDobleCon\,\% con ella: cambia el nivel, no el papel de la campaña); además, quitar la campaña suprime toda influencia externa, así que su efecto es una cota superior. Queda contrastar el escenario con las primeras ventas de GTA~6.
+El modelo reproduce la partición de prueba de la PS5 con un error de \cifraAbmRmsePru\ puntos y deja tres conclusiones. Primera: en una tecnología que se difunde por imitación, como la PS5, la publicidad es necesaria para que la difusión despegue (como máximo \cifraPsSinMaxGlobal\,\% de adopción sin campaña, frente a \cifraPsConMin\,\% o más con ella) y su efecto se acumula con los meses. Segunda: en un lanzamiento dominado por la publicidad, como GTA~6, el primer mes de campaña decide el resultado y la red casi no influye. Tercera: la densidad y la topología de la red importan sobre todo cuando no hay publicidad.
+
+El trabajo tiene varias limitaciones. Todos los agentes comparten los mismos coeficientes y la red no cambia. Las unidades vendidas a tiendas no son exactamente compradores. Los parámetros de GTA~6 son hipotéticos; si se duplican su potencial y sus compradores del primer día, cambia el nivel de adopción (\cifraSensDobleSin\,\% sin campaña y \cifraSensDobleCon\,\% con ella), pero no el papel de la campaña. Queda comparar el escenario de GTA~6 con sus primeras ventas.
 
 \bibliographystyle{splncs04}
 \bibliography{referencias}
